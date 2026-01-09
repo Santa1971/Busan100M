@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 갈맷길 100M | 홈</title>
+    <meta name="description" content="부산 갈맷길 100M 트레일러닝 공식 웹사이트 - 2026년 4월 25일 개최">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-desktop glass">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
+                <span class="gradient-text">갈맷길 100M</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="course.html">코스</a></li>
+                <li><a href="schedule.html">일정</a></li>
+                <li><a href="registration.html">참가신청</a></li>
+                <li><a href="notices.html">공지사항</a></li>
+                <li><a href="community.html">커뮤니티</a></li>
+                <li><a href="results.html">결과조회</a></li>
+            </ul>
+            <button class="nav-hamburger">☰</button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">🏠 홈</a>
+        <a href="course.html">🗺️ 코스</a>
+        <a href="schedule.html">📅 일정</a>
+        <a href="registration.html">📝 참가신청</a>
+        <a href="notices.html">📢 공지사항</a>
+        <a href="community.html">👥 커뮤니티</a>
+        <a href="results.html">🏆 결과조회</a>
+    </div>
+
+    <!-- Cheer Marquee -->
+    <div class="cheer-marquee">
+        <div class="cheer-marquee-inner marquee"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero"
+        style="min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; padding-top:100px;">
+        <div class="hero-bg"
+            style="position:absolute; inset:0; background:url('assets/hero_bg.jpg') center/cover; opacity:0.4;"></div>
+        <div
+            style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(2,6,23,0.5), transparent, rgba(2,6,23,1));">
+        </div>
+
+        <div style="position:relative; z-index:10; text-align:center; padding:0 24px;" class="fade-in">
+            <h1 style="font-size:clamp(2.5rem, 8vw, 4.5rem); font-weight:900; margin-bottom:16px;">
+                <span class="gradient-text">부산 갈맷길</span><br>
+                <span style="color:#fff;">100M</span>
+            </h1>
+            <p style="font-size:clamp(1rem, 3vw, 1.5rem); color:var(--slate-300); margin-bottom:32px;">
+                2026년 4월 25일 | 낙동강 하구 → 송정
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center;">
+                <a href="registration.html" class="btn-primary">참가 신청하기</a>
+                <a href="course.html" class="btn-secondary">코스 보기</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Info Section -->
+    <section style="padding:80px 24px; max-width:1200px; margin:0 auto;">
+        <h2 style="font-size:2rem; text-align:center; margin-bottom:48px;" class="gradient-text">대회 정보</h2>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:24px;">
+            <div class="glass-card" style="padding:32px; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:16px;">🏔️</div>
+                <h3 style="font-size:1.25rem; margin-bottom:8px;">100km 코스</h3>
+                <p style="color:var(--slate-400);">낙동강 하구부터 송정까지<br>부산의 아름다운 해안선을 달리다</p>
+            </div>
+            <div class="glass-card" style="padding:32px; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:16px;">⏱️</div>
+                <h3 style="font-size:1.25rem; margin-bottom:8px;">18시간 제한</h3>
+                <p style="color:var(--slate-400);">04:00 출발 → 22:00 마감<br>7개 체크포인트 컷오프</p>
+            </div>
+            <div class="glass-card" style="padding:32px; text-align:center;">
+                <div style="font-size:3rem; margin-bottom:16px;">🏅</div>
+                <h3 style="font-size:1.25rem; margin-bottom:8px;">완주 메달 & 인증서</h3>
+                <p style="color:var(--slate-400);">완주자 전원 메달 수여<br>온라인 완주증 발급</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Widget -->
+    <section style="padding:40px 24px; max-width:800px; margin:0 auto;">
+        <div class="glass-card" style="padding:24px;">
+            <h3 style="text-align:center; margin-bottom:24px;">🌤️ 예상 날씨 (4월 25일)</h3>
+            <div id="weather-widget"
+                style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; text-align:center;">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section style="padding:80px 24px; text-align:center;">
+        <div class="glass-card" style="max-width:600px; margin:0 auto; padding:48px 32px;">
+            <h2 style="font-size:1.75rem; margin-bottom:16px;">🔥 지금 참가 신청하세요!</h2>
+            <p style="color:var(--slate-400); margin-bottom:24px;">선착순 500명 한정 / 1월 31일 마감</p>
+            <a href="registration.html" class="btn-primary">참가 신청</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="assets/logo.png" alt="Logo"
+            style="width:48px; height:48px; border-radius:50%; margin-bottom:16px; opacity:0.5;"
+            onerror="this.style.display='none'">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">부산 갈맷길 100M</div>
+        <div style="font-size:0.875rem; margin-bottom:4px;">주최: 부산광역시 | 주관: 부산트레일러닝협회</div>
+        <div style="font-size:0.875rem;">문의: galmaetgil100m@example.com</div>
+        <div style="font-size:0.75rem; margin-top:16px;">© 2026 Busan Galmaetgil 100M. All rights reserved.</div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="index.html"><span class="icon">🏠</span>홈</a>
+            <a href="course.html"><span class="icon">🗺️</span>코스</a>
+            <a href="schedule.html"><span class="icon">📅</span>일정</a>
+            <a href="registration.html"><span class="icon">📝</span>신청</a>
+            <a href="results.html"><span class="icon">🏆</span>결과</a>
+        </div>
+    </nav>
+
+    <!-- SOS Button -->
+    <button class="sos-btn">SOS</button>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Weather Widget
+        document.addEventListener('DOMContentLoaded', async () => {
+            const weather = await fetchData('getWeather');
+            if (weather) {
+                document.getElementById('weather-widget').innerHTML = `
+                    <div>
+                        <div style="font-size:2.5rem;">${weather.start.icon}</div>
+                        <div style="font-size:0.875rem; color:var(--slate-400);">출발지</div>
+                        <div style="font-weight:700;">${weather.start.temp}°C</div>
+                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.start.desc}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:2.5rem;">${weather.summit.icon}</div>
+                        <div style="font-size:0.875rem; color:var(--slate-400);">정상</div>
+                        <div style="font-weight:700;">${weather.summit.temp}°C</div>
+                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.summit.desc}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:2.5rem;">${weather.finish.icon}</div>
+                        <div style="font-size:0.875rem; color:var(--slate-400);">도착지</div>
+                        <div style="font-weight:700;">${weather.finish.temp}°C</div>
+                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.finish.desc}</div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

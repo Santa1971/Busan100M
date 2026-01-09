@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 갈맷길 100M | 참가신청</title>
+    <meta name="description" content="부산 갈맷길 100M 참가 신청 및 현황 조회">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-desktop glass">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
+                <span class="gradient-text">갈맷길 100M</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="course.html">코스</a></li>
+                <li><a href="schedule.html">일정</a></li>
+                <li><a href="registration.html">참가신청</a></li>
+                <li><a href="notices.html">공지사항</a></li>
+                <li><a href="community.html">커뮤니티</a></li>
+                <li><a href="results.html">결과조회</a></li>
+            </ul>
+            <button class="nav-hamburger">☰</button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">🏠 홈</a>
+        <a href="course.html">🗺️ 코스</a>
+        <a href="schedule.html">📅 일정</a>
+        <a href="registration.html">📝 참가신청</a>
+        <a href="notices.html">📢 공지사항</a>
+        <a href="community.html">👥 커뮤니티</a>
+        <a href="results.html">🏆 결과조회</a>
+    </div>
+
+    <!-- Cheer Marquee -->
+    <div class="cheer-marquee">
+        <div class="cheer-marquee-inner marquee"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main style="padding-top:120px; min-height:100vh;">
+        <section style="max-width:1000px; margin:0 auto; padding:40px 24px;">
+            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:48px;" class="gradient-text">참가 신청</h1>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:32px;">
+                <!-- Registration Form -->
+                <div class="glass-card" style="padding:32px;">
+                    <h2 style="font-size:1.25rem; margin-bottom:24px;">📝 신청서 작성</h2>
+                    <form id="registration-form" style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">이름
+                                *</label>
+                            <input type="text" name="name" required class="form-input" placeholder="홍길동">
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">생년월일
+                                *</label>
+                            <input type="date" name="birth" required class="form-input">
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">연락처
+                                *</label>
+                            <input type="tel" name="phone" required class="form-input" placeholder="010-0000-0000">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                            <div>
+                                <label
+                                    style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">코스
+                                    *</label>
+                                <select name="course" required class="form-input">
+                                    <option value="100M">100M</option>
+                                    <option value="50M">50M</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">혈액형</label>
+                                <select name="bloodType" class="form-input">
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
+                                이름</label>
+                            <input type="text" name="emergencyContact" class="form-input" placeholder="김부모">
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
+                                번호</label>
+                            <input type="tel" name="emergencyPhone" class="form-input" placeholder="010-0000-0000">
+                        </div>
+                        <button type="submit" class="btn-primary" style="margin-top:8px; width:100%;">
+                            신청하기
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Status Check -->
+                <div class="glass-card" style="padding:32px;">
+                    <h2 style="font-size:1.25rem; margin-bottom:24px;">🔍 신청 현황 조회</h2>
+                    <form id="status-form" style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">이름</label>
+                            <input type="text" id="status-name" required class="form-input" placeholder="홍길동">
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">휴대폰
+                                뒷자리 4개</label>
+                            <input type="text" id="status-phone" required maxlength="4" class="form-input"
+                                placeholder="0000">
+                        </div>
+                        <button type="submit" class="btn-primary btn-blue" style="width:100%;">
+                            조회하기
+                        </button>
+                    </form>
+
+                    <div id="status-result" style="margin-top:24px;"></div>
+
+                    <div style="margin-top:32px; padding:16px; background:var(--slate-800); border-radius:12px;">
+                        <p style="font-size:0.875rem; color:var(--slate-400);">
+                            💡 <strong>테스트 조회:</strong><br>
+                            이름: 김철수 / 뒷자리: 1234
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">부산 갈맷길 100M</div>
+        <div style="font-size:0.875rem;">© 2026 Busan Galmaetgil 100M. All rights reserved.</div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="index.html"><span class="icon">🏠</span>홈</a>
+            <a href="course.html"><span class="icon">🗺️</span>코스</a>
+            <a href="schedule.html"><span class="icon">📅</span>일정</a>
+            <a href="registration.html"><span class="icon">📝</span>신청</a>
+            <a href="results.html"><span class="icon">🏆</span>결과</a>
+        </div>
+    </nav>
+
+    <!-- SOS Button -->
+    <button class="sos-btn">SOS</button>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Registration Form
+        document.getElementById('registration-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            if (USE_MOCK) {
+                alert('🎉 참가 신청이 완료되었습니다!\n\n(Mock 모드 - 실제 데이터는 저장되지 않습니다)');
+                e.target.reset();
+            }
+        });
+
+        // Status Check Form
+        document.getElementById('status-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('status-name').value;
+            const phone4 = document.getElementById('status-phone').value;
+            const resultDiv = document.getElementById('status-result');
+
+            resultDiv.innerHTML = '<p style="text-align:center; color:var(--slate-400);">조회 중...</p>';
+
+            const result = await checkRegistrationStatus(name, phone4);
+
+            if (result.found) {
+                resultDiv.innerHTML = `
+                    <div style="padding:20px; background:rgba(34, 197, 94, 0.1); border:1px solid var(--green-500); border-radius:12px;">
+                        <div style="font-weight:700; color:var(--green-500); margin-bottom:12px;">✅ 신청 확인됨</div>
+                        <div style="display:grid; gap:8px;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span style="color:var(--slate-400);">코스</span>
+                                <span style="font-weight:600;">${result.course}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span style="color:var(--slate-400);">상태</span>
+                                <span style="font-weight:600; color:var(--green-500);">${result.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="padding:20px; background:rgba(239, 68, 68, 0.1); border:1px solid var(--neon-red); border-radius:12px;">
+                        <div style="font-weight:700; color:var(--neon-red);">❌ 신청 내역을 찾을 수 없습니다</div>
+                        <p style="font-size:0.875rem; color:var(--slate-400); margin-top:8px;">이름과 휴대폰 뒷자리를 다시 확인해주세요.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

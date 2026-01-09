@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 갈맷길 100M | 일정</title>
+    <meta name="description" content="부산 갈맷길 100M 대회 일정 및 타임테이블">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-desktop glass">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
+                <span class="gradient-text">갈맷길 100M</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="course.html">코스</a></li>
+                <li><a href="schedule.html">일정</a></li>
+                <li><a href="registration.html">참가신청</a></li>
+                <li><a href="notices.html">공지사항</a></li>
+                <li><a href="community.html">커뮤니티</a></li>
+                <li><a href="results.html">결과조회</a></li>
+            </ul>
+            <button class="nav-hamburger">☰</button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">🏠 홈</a>
+        <a href="course.html">🗺️ 코스</a>
+        <a href="schedule.html">📅 일정</a>
+        <a href="registration.html">📝 참가신청</a>
+        <a href="notices.html">📢 공지사항</a>
+        <a href="community.html">👥 커뮤니티</a>
+        <a href="results.html">🏆 결과조회</a>
+    </div>
+
+    <!-- Cheer Marquee -->
+    <div class="cheer-marquee">
+        <div class="cheer-marquee-inner marquee"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main style="padding-top:120px; min-height:100vh;">
+        <section style="max-width:800px; margin:0 auto; padding:40px 24px;">
+            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:16px;" class="gradient-text">대회 일정</h1>
+            <p style="text-align:center; color:var(--slate-400); margin-bottom:48px;">2026년 4월 25일 (토)</p>
+
+            <!-- Schedule Timeline -->
+            <div id="schedule-list" style="display:flex; flex-direction:column; gap:16px;">
+                <!-- Filled by JS -->
+            </div>
+        </section>
+
+        <!-- Checkpoint Cutoffs -->
+        <section style="max-width:800px; margin:0 auto; padding:0 24px 80px;">
+            <h2 style="font-size:1.5rem; margin-bottom:24px; text-align:center;">⏱️ 체크포인트 컷오프</h2>
+            <div class="glass-card" style="overflow:hidden;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:var(--slate-800);">
+                            <th style="padding:16px; text-align:left;">체크포인트</th>
+                            <th style="padding:16px; text-align:center;">거리</th>
+                            <th style="padding:16px; text-align:center;">컷오프</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cutoff-table">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">부산 갈맷길 100M</div>
+        <div style="font-size:0.875rem;">© 2026 Busan Galmaetgil 100M. All rights reserved.</div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="index.html"><span class="icon">🏠</span>홈</a>
+            <a href="course.html"><span class="icon">🗺️</span>코스</a>
+            <a href="schedule.html"><span class="icon">📅</span>일정</a>
+            <a href="registration.html"><span class="icon">📝</span>신청</a>
+            <a href="results.html"><span class="icon">🏆</span>결과</a>
+        </div>
+    </nav>
+
+    <!-- SOS Button -->
+    <button class="sos-btn">SOS</button>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load Schedule
+            const schedule = await fetchData('getSchedule');
+            const scheduleList = document.getElementById('schedule-list');
+
+            scheduleList.innerHTML = schedule.map(item => `
+                <div class="glass-card" style="padding:20px; display:flex; align-items:center; gap:16px;">
+                    <div style="font-size:2.5rem;">${item.icon}</div>
+                    <div style="flex:1;">
+                        <div style="color:var(--neon-red); font-weight:700; font-size:1.125rem;">${item.time}</div>
+                        <div style="font-weight:600;">${item.title}</div>
+                        <div style="font-size:0.875rem; color:var(--slate-400);">📍 ${item.location}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Load Checkpoints for cutoff table
+            const checkpoints = await fetchData('getCheckpoints');
+            const cutoffTable = document.getElementById('cutoff-table');
+
+            cutoffTable.innerHTML = checkpoints.map((cp, i) => {
+                const isStart = i === 0;
+                const isFinish = i === checkpoints.length - 1;
+                const bgColor = isStart ? 'rgba(34, 197, 94, 0.1)' : isFinish ? 'rgba(239, 68, 68, 0.1)' : '';
+
+                return `
+                    <tr style="border-top:1px solid var(--slate-700); background:${bgColor};">
+                        <td style="padding:16px;">
+                            <span style="font-weight:600;">${cp.name}</span>
+                        </td>
+                        <td style="padding:16px; text-align:center;">${cp.km}km</td>
+                        <td style="padding:16px; text-align:center; color:var(--neon-red); font-weight:700;">${cp.cutoff}</td>
+                    </tr>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+
+</html>

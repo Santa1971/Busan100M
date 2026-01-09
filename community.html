@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 갈맷길 100M | 커뮤니티</title>
+    <meta name="description" content="부산 갈맷길 100M 카풀/숙소 게시판">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-desktop glass">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
+                <span class="gradient-text">갈맷길 100M</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="course.html">코스</a></li>
+                <li><a href="schedule.html">일정</a></li>
+                <li><a href="registration.html">참가신청</a></li>
+                <li><a href="notices.html">공지사항</a></li>
+                <li><a href="community.html">커뮤니티</a></li>
+                <li><a href="results.html">결과조회</a></li>
+            </ul>
+            <button class="nav-hamburger">☰</button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">🏠 홈</a>
+        <a href="course.html">🗺️ 코스</a>
+        <a href="schedule.html">📅 일정</a>
+        <a href="registration.html">📝 참가신청</a>
+        <a href="notices.html">📢 공지사항</a>
+        <a href="community.html">👥 커뮤니티</a>
+        <a href="results.html">🏆 결과조회</a>
+    </div>
+
+    <!-- Cheer Marquee -->
+    <div class="cheer-marquee">
+        <div class="cheer-marquee-inner marquee"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main style="padding-top:120px; min-height:100vh;">
+        <section style="max-width:800px; margin:0 auto; padding:40px 24px;">
+            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:16px;" class="gradient-text">커뮤니티</h1>
+            <p style="text-align:center; color:var(--slate-400); margin-bottom:48px;">카풀 및 숙소 정보를 공유하세요.</p>
+
+            <!-- Carpool Board -->
+            <div class="glass-card" style="padding:24px; margin-bottom:32px;">
+                <h2 style="font-size:1.25rem; margin-bottom:24px;">🚗 카풀/숙소 게시판</h2>
+
+                <div id="carpool-list" style="display:flex; flex-direction:column; gap:12px;">
+                    <!-- Filled by JS -->
+                </div>
+
+                <button onclick="showPostForm()" style="margin-top:24px; width:100%; padding:16px; background:none; 
+                               border:2px dashed var(--slate-600); border-radius:12px; 
+                               color:var(--slate-400); cursor:pointer; transition:all 0.2s;"
+                    onmouseover="this.style.borderColor='var(--neon-blue)'; this.style.color='var(--neon-blue)';"
+                    onmouseout="this.style.borderColor='var(--slate-600)'; this.style.color='var(--slate-400)';">
+                    + 글 작성하기
+                </button>
+            </div>
+
+            <!-- Post Form (Hidden by default) -->
+            <div id="post-form" class="glass-card" style="padding:24px; display:none;">
+                <h2 style="font-size:1.25rem; margin-bottom:24px;">✏️ 새 글 작성</h2>
+                <form onsubmit="submitPost(event)" style="display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">유형</label>
+                            <select name="type" required class="form-input">
+                                <option value="카풀">🚗 카풀</option>
+                                <option value="숙소">🏠 숙소</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">인원/좌석</label>
+                            <input type="number" name="seats" required class="form-input" placeholder="2" min="1">
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">출발지/위치</label>
+                        <input type="text" name="origin" required class="form-input" placeholder="서울 강남역 / 해운대 민박">
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">일시</label>
+                        <input type="text" name="time" required class="form-input" placeholder="04/24 저녁">
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">연락처</label>
+                        <input type="text" name="contact" required class="form-input" placeholder="010-0000-0000">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">삭제
+                            비밀번호</label>
+                        <input type="password" name="password" required class="form-input" placeholder="글 삭제 시 필요">
+                    </div>
+                    <div style="display:flex; gap:12px;">
+                        <button type="button" onclick="hidePostForm()" class="btn-secondary" style="flex:1;">취소</button>
+                        <button type="submit" class="btn-primary" style="flex:1;">등록하기</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">부산 갈맷길 100M</div>
+        <div style="font-size:0.875rem;">© 2026 Busan Galmaetgil 100M. All rights reserved.</div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="index.html"><span class="icon">🏠</span>홈</a>
+            <a href="course.html"><span class="icon">🗺️</span>코스</a>
+            <a href="schedule.html"><span class="icon">📅</span>일정</a>
+            <a href="registration.html"><span class="icon">📝</span>신청</a>
+            <a href="results.html"><span class="icon">🏆</span>결과</a>
+        </div>
+    </nav>
+
+    <!-- SOS Button -->
+    <button class="sos-btn">SOS</button>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const carpool = await fetchData('getCarpool');
+            renderCarpool(carpool);
+        });
+
+        function renderCarpool(items) {
+            const list = document.getElementById('carpool-list');
+            list.innerHTML = items.map(item => `
+                <div style="padding:16px; background:var(--slate-800); border-radius:12px; 
+                            display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <span style="display:inline-block; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;
+                                     background:${item.type === '카풀' ? 'var(--neon-blue)' : 'var(--purple-500)'};">
+                            ${item.type === '카풀' ? '🚗' : '🏠'} ${item.type}
+                        </span>
+                        <span style="font-weight:600; margin-left:8px;">${item.origin}</span>
+                        <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">
+                            ${item.time} · ${item.seats}자리 · ${item.contact}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showPostForm() {
+            document.getElementById('post-form').style.display = 'block';
+            document.getElementById('post-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hidePostForm() {
+            document.getElementById('post-form').style.display = 'none';
+        }
+
+        function submitPost(e) {
+            e.preventDefault();
+            if (USE_MOCK) {
+                alert('✅ 글이 등록되었습니다!\n\n(Mock 모드 - 실제 데이터는 저장되지 않습니다)');
+                hidePostForm();
+            }
+        }
+    </script>
+</body>
+
+</html>
