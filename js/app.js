@@ -2,8 +2,8 @@
 // Busan Galmaetgil 100M - Common App Logic
 // ============================================
 
-const USE_MOCK = true;
-const API_URL = 'YOUR_GAS_DEPLOYMENT_URL';
+const USE_MOCK = false;
+const API_URL = 'https://script.google.com/macros/s/AKfycbwzcVDqBzkd3uF7hHWJpv2bCHZwiWVrilULi3CbuE24BaiXQt_t9zkD8LyRhzdMeSGt/exec';
 
 // ============================================
 // MOCK DATA
