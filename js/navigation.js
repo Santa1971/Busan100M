@@ -137,12 +137,45 @@ class GPXNavigation {
             ? [this.gpxData[Math.floor(this.gpxData.length / 2)].lat, this.gpxData[Math.floor(this.gpxData.length / 2)].lon]
             : [35.1, 129.0];
 
-        this.map = L.map(containerId).setView(center, 11);
+        this.map = L.map(containerId, {
+            zoomControl: true,
+            scrollWheelZoom: true
+        }).setView(center, 11);
 
-        // OpenTopoMap layer
-        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            maxZoom: 17,
-            attribution: 'OpenTopoMap'
+        // Define multiple map layers
+        const baseLayers = {
+            '🗺️ 등고선 (OpenTopoMap)': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: 'OpenTopoMap'
+            }),
+            '🛰️ 위성지도 (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: 'Esri World Imagery'
+            }),
+            '🌍 일반지도 (OpenStreetMap)': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }),
+            '🏔️ 지형도 (Stamen)': L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
+                maxZoom: 18,
+                attribution: 'Stadia Maps'
+            })
+        };
+
+        // Add default layer (등고선)
+        baseLayers['🗺️ 등고선 (OpenTopoMap)'].addTo(this.map);
+
+        // Add layer control to switch between map types
+        L.control.layers(baseLayers, null, {
+            position: 'topright',
+            collapsed: true
+        }).addTo(this.map);
+
+        // Add scale control
+        L.control.scale({
+            metric: true,
+            imperial: false,
+            position: 'bottomleft'
         }).addTo(this.map);
 
         // Draw route
@@ -172,15 +205,55 @@ class GPXNavigation {
 
             // Color based on slope
             let color;
-            if (gradient > 5) color = '#ef4444'; // Uphill - Red
-            else if (gradient < -5) color = '#3b82f6'; // Downhill - Blue
-            else color = '#22c55e'; // Flat - Green
+            let slopeType;
+            if (gradient > 5) {
+                color = '#ef4444'; // Uphill - Red
+                slopeType = '오르막 ↗️';
+            } else if (gradient < -5) {
+                color = '#3b82f6'; // Downhill - Blue
+                slopeType = '내리막 ↘️';
+            } else {
+                color = '#22c55e'; // Flat - Green
+                slopeType = '평지 ➡️';
+            }
 
-            segments.push(L.polyline([coords[i], coords[i + 1]], {
+            const segment = L.polyline([coords[i], coords[i + 1]], {
                 color: color,
-                weight: 4,
+                weight: 6,
                 opacity: 0.8
-            }));
+            });
+
+            // Add click event to show track info
+            const pointData = this.gpxData[i];
+            segment.on('click', (e) => {
+                const popupContent = `
+                    <div style="font-size:14px; min-width:180px;">
+                        <div style="font-weight:bold; margin-bottom:8px; color:#0f172a;">📍 트랙 정보</div>
+                        <table style="width:100%;">
+                            <tr><td style="color:#64748b;">거리</td><td style="font-weight:600;">${pointData.distance.toFixed(2)} km</td></tr>
+                            <tr><td style="color:#64748b;">고도</td><td style="font-weight:600;">${pointData.elevation.toFixed(0)} m</td></tr>
+                            <tr><td style="color:#64748b;">경사</td><td style="font-weight:600; color:${color};">${slopeType}</td></tr>
+                        </table>
+                        <div style="margin-top:8px; font-size:12px; color:#94a3b8;">
+                            좌표: ${pointData.lat.toFixed(5)}, ${pointData.lon.toFixed(5)}
+                        </div>
+                    </div>
+                `;
+                L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(popupContent)
+                    .openOn(this.map);
+            });
+
+            // Change cursor on hover
+            segment.on('mouseover', () => {
+                segment.setStyle({ weight: 10, opacity: 1 });
+            });
+            segment.on('mouseout', () => {
+                segment.setStyle({ weight: 6, opacity: 0.8 });
+            });
+
+            segments.push(segment);
         }
 
         this.routeLine = L.layerGroup(segments).addTo(this.map);
