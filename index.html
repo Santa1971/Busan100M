@@ -4,18 +4,837 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부산 갈맷길 100M | 홈</title>
-    <meta name="description" content="부산 갈맷길 100M 트레일러닝 공식 웹사이트 - 2026년 4월 25일 개최">
-    <link rel="stylesheet" href="css/styles.css">
+    <title>부산 갈맷길 100M | 3.1절 특별 이벤트</title>
+    <meta name="description" content="부산 갈맷길 100M 트레일러닝 공식 웹사이트 - 2026년 3월 1일 개최, 3.1절 특별 이벤트">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nanum+Brush+Script&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* 네비게이션 */
+        .nav-desktop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 32px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-logo span {
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn-login {
+            padding: 10px 24px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn-register {
+            padding: 10px 24px;
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-btn-register:hover {
+            background: #dc2626;
+        }
+
+        .nav-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* 히어로 섹션 */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('assets/hero_dark_bg.jpg') center/cover no-repeat;
+            opacity: 0.6;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(10, 10, 15, 0.4) 0%,
+                    rgba(10, 10, 15, 0.2) 40%,
+                    rgba(10, 10, 15, 0.6) 70%,
+                    rgba(10, 10, 15, 1) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .special-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 25px;
+            padding: 10px 28px;
+            font-size: 0.75rem;
+            color: #ef4444;
+            font-weight: 600;
+            margin-bottom: 32px;
+            letter-spacing: 3px;
+        }
+
+        .special-badge::before {
+            content: '●';
+            margin-right: 10px;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.15;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .english-subtitle {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #3b82f6;
+            font-weight: 600;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .event-title {
+            font-family: 'Nanum Brush Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            color: #ef4444;
+            margin-bottom: 32px;
+            text-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .hero-description {
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            color: #94a3b8;
+            line-height: 1.9;
+            margin-bottom: 56px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 정보 카드 */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 860px;
+            margin: 0 auto 48px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .info-card {
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 32px 20px;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-card:last-child {
+            border-right: none;
+        }
+
+        .info-card .icon {
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+            display: block;
+            color: #ef4444;
+        }
+
+        .info-card .label {
+            font-size: 0.65rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .info-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .info-card .value small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #94a3b8;
+        }
+
+        .info-card.status .value {
+            font-size: 0.95rem;
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* 경로 정보 */
+        .route-info {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        /* 버튼 */
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-red {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 44px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-red:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 44px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 특징 섹션 */
+        .features-section {
+            padding: 80px 24px 120px;
+            background: #0a0a0f;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 32px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #0a0a0f;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 40px 24px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-left {
+            color: #64748b;
+        }
+
+        .footer-left .title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .footer-left .desc {
+            font-size: 0.8rem;
+        }
+
+        .footer-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+
+        /* Video Gallery Styles */
+        .video-gallery {
+            padding: 80px 24px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .video-gallery .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .video-gallery .section-header h2 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .video-gallery .section-header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(239, 68, 68, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .video-card:hover .play-button {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+            background: #ef4444;
+        }
+
+        .video-info {
+            padding: 16px 20px;
+        }
+
+        .video-info h4 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #ef4444;
+        }
+
+        /* 갤러리 섹션 */
+        .gallery-section {
+            padding: 80px 24px;
+            background: linear-gradient(to bottom, #0a0a0f, #111118);
+        }
+
+        .gallery-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .gallery-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 0.75rem;
+            color: #ef4444;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .gallery-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .gallery-desc {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item.large {
+            min-height: 350px;
+        }
+
+        .gallery-item:not(.large) {
+            min-height: 350px;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+            transition: background 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            background: linear-gradient(to top, rgba(239, 68, 68, 0.8) 0%, rgba(0, 0, 0, 0.3) 100%);
+        }
+
+        .gallery-year {
+            font-size: 0.75rem;
+            color: #ef4444;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .gallery-caption {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* 하단 네비게이션 (모바일) */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 100;
+            padding: 10px 0;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+
+        .bottom-nav-inner {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.625rem;
+            padding: 4px 12px;
+        }
+
+        .bottom-nav a.active {
+            color: #ef4444;
+        }
+
+        .bottom-nav .icon {
+            font-size: 1.25rem;
+        }
+
+        /* SOS 버튼 */
+        .sos-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: #ef4444;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .sos-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 반응형 */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .nav-hamburger {
+                display: block;
+            }
+
+            .info-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-card {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bottom-nav {
+                display: block;
+            }
+
+            .sos-btn {
+                bottom: 90px;
+            }
+
+            body {
+                padding-bottom: 70px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-red,
+            .btn-outline {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+
+        /* 모바일 메뉴 */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0f;
+            z-index: 99;
+            padding: 24px;
+        }
+
+        .mobile-menu.open {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 16px 0;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="nav-desktop glass">
+    <nav class="nav-desktop">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
-                <span class="gradient-text">갈맷길 100M</span>
+                <img src="assets/main_logo.jpg" alt="갈맷길 100M" class="logo-img">
+                <span>BUSAN 100M</span>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">홈</a></li>
@@ -26,12 +845,12 @@
                 <li><a href="community.html">커뮤니티</a></li>
                 <li><a href="results.html">결과조회</a></li>
             </ul>
-            <button class="nav-hamburger">☰</button>
+            <button class="nav-hamburger" onclick="toggleMenu()">☰</button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu">
+    <div class="mobile-menu" id="mobileMenu">
         <a href="index.html">🏠 홈</a>
         <a href="course.html">🗺️ 코스</a>
         <a href="schedule.html">📅 일정</a>
@@ -41,93 +860,204 @@
         <a href="results.html">🏆 결과조회</a>
     </div>
 
-    <!-- Cheer Marquee -->
-    <div class="cheer-marquee">
-        <div class="cheer-marquee-inner marquee"></div>
-    </div>
-
     <!-- Hero Section -->
-    <section class="hero"
-        style="min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; padding-top:100px;">
-        <div class="hero-bg"
-            style="position:absolute; inset:0; background:url('assets/hero_bg.jpg') center/cover; opacity:0.4;"></div>
-        <div
-            style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(2,6,23,0.5), transparent, rgba(2,6,23,1));">
-        </div>
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
 
-        <div style="position:relative; z-index:10; text-align:center; padding:0 24px;" class="fade-in">
-            <h1 style="font-size:clamp(2.5rem, 8vw, 4.5rem); font-weight:900; margin-bottom:16px;">
-                <span class="gradient-text">부산 갈맷길</span><br>
-                <span style="color:#fff;">100M</span>
-            </h1>
-            <p style="font-size:clamp(1rem, 3vw, 1.5rem); color:var(--slate-300); margin-bottom:32px;">
-                2026년 4월 25일 | 낙동강 하구 → 송정
+        <div class="hero-content fade-in">
+            <div class="special-badge">2026 SPECIAL EDITION</div>
+
+            <h1 class="main-title">부산 갈맷길 100M</h1>
+            <p class="english-subtitle">GALMAETGIL 100MILES (160KM)</p>
+            <h2 class="event-title">3.1절 특별 이벤트</h2>
+
+            <p class="hero-description">
+                대한독립의 열망과 러너의 투혼이 만나는 100마일의 대장정.<br>
+                부산의 해안선을 따라 역사를 달리고 한계를 극복하십시오.
             </p>
-            <div style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center;">
-                <a href="registration.html" class="btn-primary">참가 신청하기</a>
-                <a href="course.html" class="btn-secondary">코스 보기</a>
+
+            <!-- Info Cards -->
+            <div class="info-cards">
+                <div class="info-card">
+                    <span class="icon">📏</span>
+                    <div class="label">거리</div>
+                    <div class="value">100<small> Miles</small></div>
+                </div>
+                <div class="info-card">
+                    <span class="icon">⏱️</span>
+                    <div class="label">제한시간</div>
+                    <div class="value">40<small> Hours</small></div>
+                </div>
+                <div class="info-card">
+                    <span class="icon">📅</span>
+                    <div class="label">대회일자</div>
+                    <div class="value">3월 1일</div>
+                </div>
+                <div class="info-card status">
+                    <span class="icon">👤</span>
+                    <div class="label">접수현황</div>
+                    <div class="value">접수중</div>
+                </div>
+            </div>
+
+            <!-- Route Info -->
+            <p class="route-info">
+                2026년 3월 1일 16:00시 | 다대포해수욕장 → 기장군청 → 다대포해수욕장
+            </p>
+
+            <!-- Buttons -->
+            <div class="hero-buttons">
+                <a href="registration.html" class="btn-red">참가신청 →</a>
+                <a href="course.html" class="btn-outline">코스 확인 🗺️</a>
             </div>
         </div>
     </section>
 
-    <!-- Quick Info Section -->
-    <section style="padding:80px 24px; max-width:1200px; margin:0 auto;">
-        <h2 style="font-size:2rem; text-align:center; margin-bottom:48px;" class="gradient-text">대회 정보</h2>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:24px;">
-            <div class="glass-card" style="padding:32px; text-align:center;">
-                <div style="font-size:3rem; margin-bottom:16px;">🏔️</div>
-                <h3 style="font-size:1.25rem; margin-bottom:8px;">100km 코스</h3>
-                <p style="color:var(--slate-400);">낙동강 하구부터 송정까지<br>부산의 아름다운 해안선을 달리다</p>
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="gallery-container">
+            <div class="gallery-header">
+                <span class="gallery-badge">🏃 MOMENTS</span>
+                <h2 class="gallery-title">지난 대회의 감동</h2>
+                <p class="gallery-desc">태극기를 들고 달리는 러너들의 열정과 투혼을 함께하세요</p>
             </div>
-            <div class="glass-card" style="padding:32px; text-align:center;">
-                <div style="font-size:3rem; margin-bottom:16px;">⏱️</div>
-                <h3 style="font-size:1.25rem; margin-bottom:8px;">18시간 제한</h3>
-                <p style="color:var(--slate-400);">04:00 출발 → 22:00 마감<br>7개 체크포인트 컷오프</p>
-            </div>
-            <div class="glass-card" style="padding:32px; text-align:center;">
-                <div style="font-size:3rem; margin-bottom:16px;">🏅</div>
-                <h3 style="font-size:1.25rem; margin-bottom:8px;">완주 메달 & 인증서</h3>
-                <p style="color:var(--slate-400);">완주자 전원 메달 수여<br>온라인 완주증 발급</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Weather Widget -->
-    <section style="padding:40px 24px; max-width:800px; margin:0 auto;">
-        <div class="glass-card" style="padding:24px;">
-            <h3 style="text-align:center; margin-bottom:24px;">🌤️ 예상 날씨 (4월 25일)</h3>
-            <div id="weather-widget"
-                style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; text-align:center;">
-                <!-- Filled by JS -->
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <img src="assets/gallery_1.jpg" alt="2025 부산갈맷길 100M 단체사진">
+                    <div class="gallery-overlay">
+                        <span class="gallery-year">2025</span>
+                        <span class="gallery-caption">3.1절 특별 대회 참가자들</span>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery_2.jpg" alt="2025 부산갈맷길 100M 러닝">
+                    <div class="gallery-overlay">
+                        <span class="gallery-year">2025</span>
+                        <span class="gallery-caption">태극기와 함께 달리는 러너들</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section style="padding:80px 24px; text-align:center;">
-        <div class="glass-card" style="max-width:600px; margin:0 auto; padding:48px 32px;">
-            <h2 style="font-size:1.75rem; margin-bottom:16px;">🔥 지금 참가 신청하세요!</h2>
-            <p style="color:var(--slate-400); margin-bottom:24px;">선착순 500명 한정 / 1월 31일 마감</p>
-            <a href="registration.html" class="btn-primary">참가 신청</a>
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div>
+                    <h3>자연과 트레일</h3>
+                    <p>부산의 해안 절벽과 산책로를 잇는 갈맷길의 정수를 체험하십시오.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div>
+                    <h3>역사적 정신</h3>
+                    <p>3.1 독립 만세 운동의 정신을 계승하며 달리는 특별한 레이스입니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Gallery Section -->
+    <section class="video-gallery">
+        <div class="section-header">
+            <h2>🎬 대회 영상</h2>
+            <p>갈맷길 100M의 감동과 열정을 영상으로 만나보세요</p>
+        </div>
+        <div class="video-grid">
+            <a href="https://www.youtube.com/watch?v=3g8Pnsky1e8" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/3g8Pnsky1e8/maxresdefault.jpg" alt="영상 1"
+                        onerror="this.src='https://img.youtube.com/vi/3g8Pnsky1e8/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>육군이 부르는 독립군가</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/HcTqamRq3Z8" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/HcTqamRq3Z8/maxresdefault.jpg" alt="영상 2"
+                        onerror="this.src='https://img.youtube.com/vi/HcTqamRq3Z8/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>3.1절 노래</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/CORg2dDOtkM" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/CORg2dDOtkM/maxresdefault.jpg" alt="영상 3"
+                        onerror="this.src='https://img.youtube.com/vi/CORg2dDOtkM/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>송소희 - 솔아 솔아 푸르른 솔아</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/zw8dPNhLrT0" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/zw8dPNhLrT0/maxresdefault.jpg" alt="영상 4"
+                        onerror="this.src='https://img.youtube.com/vi/zw8dPNhLrT0/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>8호 감방의 노래</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/tdW8o1JWjcI" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/tdW8o1JWjcI/maxresdefault.jpg" alt="영상 5"
+                        onerror="this.src='https://img.youtube.com/vi/tdW8o1JWjcI/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>BewhY (비와이) - 나의 땅</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/6pWY0GvIX0o" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/6pWY0GvIX0o/maxresdefault.jpg" alt="영상 6"
+                        onerror="this.src='https://img.youtube.com/vi/6pWY0GvIX0o/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>단지동맹</h4>
+                </div>
+            </a>
+            <a href="https://youtu.be/gJD0_ZcsjkI" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/gJD0_ZcsjkI/maxresdefault.jpg" alt="영상 7"
+                        onerror="this.src='https://img.youtube.com/vi/gJD0_ZcsjkI/hqdefault.jpg'">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="video-info">
+                    <h4>3.1절 부산 갈맷길 100K</h4>
+                </div>
+            </a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <img src="assets/logo.png" alt="Logo"
-            style="width:48px; height:48px; border-radius:50%; margin-bottom:16px; opacity:0.5;"
-            onerror="this.style.display='none'">
-        <div style="font-weight:700; color:#fff; margin-bottom:8px;">부산 갈맷길 100M</div>
-        <div style="font-size:0.875rem; margin-bottom:4px;">주최: 부산광역시 | 주관: 부산트레일러닝협회</div>
-        <div style="font-size:0.875rem;">문의: galmaetgil100m@example.com</div>
-        <div style="font-size:0.75rem; margin-top:16px;">© 2026 Busan Galmaetgil 100M. All rights reserved.</div>
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="title">© 2026 부산 갈맷길 100M 러닝프렌즈</div>
+                <div class="desc">본 대회는 3.1절 기념 특별 이벤트로 진행됩니다.</div>
+            </div>
+            <div class="footer-links">
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+                <a href="#">스폰서십</a>
+            </div>
+        </div>
     </footer>
 
     <!-- Bottom Navigation (Mobile) -->
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
-            <a href="index.html"><span class="icon">🏠</span>홈</a>
+            <a href="index.html" class="active"><span class="icon">🏠</span>홈</a>
             <a href="course.html"><span class="icon">🗺️</span>코스</a>
             <a href="schedule.html"><span class="icon">📅</span>일정</a>
             <a href="registration.html"><span class="icon">📝</span>신청</a>
@@ -138,34 +1068,13 @@
     <!-- SOS Button -->
     <button class="sos-btn">SOS</button>
 
-    <script src="js/app.js"></script>
     <script>
-        // Weather Widget
-        document.addEventListener('DOMContentLoaded', async () => {
-            const weather = await fetchData('getWeather');
-            if (weather) {
-                document.getElementById('weather-widget').innerHTML = `
-                    <div>
-                        <div style="font-size:2.5rem;">${weather.start.icon}</div>
-                        <div style="font-size:0.875rem; color:var(--slate-400);">출발지</div>
-                        <div style="font-weight:700;">${weather.start.temp}°C</div>
-                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.start.desc}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:2.5rem;">${weather.summit.icon}</div>
-                        <div style="font-size:0.875rem; color:var(--slate-400);">정상</div>
-                        <div style="font-weight:700;">${weather.summit.temp}°C</div>
-                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.summit.desc}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:2.5rem;">${weather.finish.icon}</div>
-                        <div style="font-size:0.875rem; color:var(--slate-400);">도착지</div>
-                        <div style="font-weight:700;">${weather.finish.temp}°C</div>
-                        <div style="font-size:0.75rem; color:var(--slate-400);">${weather.finish.desc}</div>
-                    </div>
-                `;
-            }
-        });
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.nav-hamburger');
+            menu.classList.toggle('open');
+            btn.textContent = menu.classList.contains('open') ? '✕' : '☰';
+        }
     </script>
 </body>
 

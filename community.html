@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부산 갈맷길 100M | 커뮤니티</title>
-    <meta name="description" content="부산 갈맷길 100M 카풀/숙소 게시판">
+    <title>부산 갈맷길 100M | 자유게시판</title>
+    <meta name="description" content="부산 갈맷길 100M 자유게시판 - 러너들의 소통 공간">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -14,7 +14,7 @@
     <nav class="nav-desktop glass">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
+                <img src="assets/main_logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
                 <span class="gradient-text">갈맷길 100M</span>
             </a>
             <ul class="nav-links">
@@ -48,71 +48,56 @@
 
     <!-- Main Content -->
     <main style="padding-top:120px; min-height:100vh;">
-        <section style="max-width:800px; margin:0 auto; padding:40px 24px;">
-            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:16px;" class="gradient-text">커뮤니티</h1>
-            <p style="text-align:center; color:var(--slate-400); margin-bottom:48px;">카풀 및 숙소 정보를 공유하세요.</p>
+        <section style="max-width:900px; margin:0 auto; padding:40px 24px;">
+            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:16px;" class="gradient-text">자유게시판</h1>
+            <p style="text-align:center; color:var(--slate-400); margin-bottom:48px;">러너들의 자유로운 이야기를 나눠보세요!</p>
 
-            <!-- Carpool Board -->
-            <div class="glass-card" style="padding:24px; margin-bottom:32px;">
-                <h2 style="font-size:1.25rem; margin-bottom:24px;">🚗 카풀/숙소 게시판</h2>
-
-                <div id="carpool-list" style="display:flex; flex-direction:column; gap:12px;">
-                    <!-- Filled by JS -->
-                </div>
-
-                <button onclick="showPostForm()" style="margin-top:24px; width:100%; padding:16px; background:none; 
-                               border:2px dashed var(--slate-600); border-radius:12px; 
-                               color:var(--slate-400); cursor:pointer; transition:all 0.2s;"
-                    onmouseover="this.style.borderColor='var(--neon-blue)'; this.style.color='var(--neon-blue)';"
-                    onmouseout="this.style.borderColor='var(--slate-600)'; this.style.color='var(--slate-400)';">
-                    + 글 작성하기
-                </button>
+            <!-- Post Form Toggle -->
+            <div style="text-align:right; margin-bottom:20px;">
+                <button onclick="showPostForm()" class="btn-primary" style="padding:12px 24px;">✏️ 글쓰기</button>
             </div>
 
             <!-- Post Form (Hidden by default) -->
-            <div id="post-form" class="glass-card" style="padding:24px; display:none;">
+            <div id="post-form" class="glass-card" style="padding:24px; display:none; margin-bottom:32px;">
                 <h2 style="font-size:1.25rem; margin-bottom:24px;">✏️ 새 글 작성</h2>
                 <form onsubmit="submitPost(event)" style="display:flex; flex-direction:column; gap:16px;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                        <div>
-                            <label
-                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">유형</label>
-                            <select name="type" required class="form-input">
-                                <option value="카풀">🚗 카풀</option>
-                                <option value="숙소">🏠 숙소</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label
-                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">인원/좌석</label>
-                            <input type="number" name="seats" required class="form-input" placeholder="2" min="1">
-                        </div>
+                    <div>
+                        <label
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">닉네임</label>
+                        <input type="text" name="nickname" required class="form-input" placeholder="닉네임을 입력하세요"
+                            maxlength="20">
                     </div>
                     <div>
                         <label
-                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">출발지/위치</label>
-                        <input type="text" name="origin" required class="form-input" placeholder="서울 강남역 / 해운대 민박">
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">제목</label>
+                        <input type="text" name="title" required class="form-input" placeholder="제목을 입력하세요"
+                            maxlength="100">
                     </div>
                     <div>
                         <label
-                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">일시</label>
-                        <input type="text" name="time" required class="form-input" placeholder="04/24 저녁">
-                    </div>
-                    <div>
-                        <label
-                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">연락처</label>
-                        <input type="text" name="contact" required class="form-input" placeholder="010-0000-0000">
+                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">내용</label>
+                        <textarea name="content" required class="form-input" placeholder="내용을 입력하세요" rows="6"
+                            style="resize:vertical;"></textarea>
                     </div>
                     <div>
                         <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">삭제
                             비밀번호</label>
-                        <input type="password" name="password" required class="form-input" placeholder="글 삭제 시 필요">
+                        <input type="password" name="password" required class="form-input" placeholder="글 삭제 시 필요"
+                            maxlength="20">
                     </div>
                     <div style="display:flex; gap:12px;">
                         <button type="button" onclick="hidePostForm()" class="btn-secondary" style="flex:1;">취소</button>
                         <button type="submit" class="btn-primary" style="flex:1;">등록하기</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Posts List -->
+            <div class="glass-card" style="padding:24px;">
+                <h2 style="font-size:1.25rem; margin-bottom:24px;">📝 게시글 목록</h2>
+                <div id="posts-list" style="display:flex; flex-direction:column; gap:12px;">
+                    <!-- Filled by JS -->
+                </div>
             </div>
         </section>
     </main>
@@ -139,24 +124,39 @@
 
     <script src="js/app.js"></script>
     <script>
+        // MOCK 게시글 데이터
+        const MOCK_POSTS = [
+            { id: 1, nickname: '러닝맨', title: '첫 100마일 도전합니다!', content: '안녕하세요! 이번 3.1절 대회에서 첫 100마일 도전합니다. 선배 러너분들의 조언 부탁드려요!', date: '2026-01-09', views: 45 },
+            { id: 2, nickname: '부산갈매기', title: '작년 완주 후기입니다', content: '작년에 완주했는데 정말 힘들었지만 보람있었어요. CP3 구간에서 컨디션 관리 중요합니다!', date: '2026-01-08', views: 128 },
+            { id: 3, nickname: '울트라러너', title: '장비 추천 부탁드려요', content: '100마일 첫 도전인데 헤드램프랑 배터리 추천 부탁드립니다!', date: '2026-01-07', views: 67 },
+            { id: 4, nickname: '갈맷길사랑', title: '함께 훈련하실 분?', content: '부산 해운대 근처에서 주말에 함께 훈련하실 분 구합니다. 30km 정도 뛰실 수 있으신 분!', date: '2026-01-06', views: 89 },
+            { id: 5, nickname: '카풀구합니다', title: '서울에서 카풀 모집', content: '서울 강남에서 대회 전날 출발 예정입니다. 2자리 남았어요. 연락주세요!', date: '2026-01-05', views: 156 }
+        ];
+
         document.addEventListener('DOMContentLoaded', async () => {
-            const carpool = await fetchData('getCarpool');
-            renderCarpool(carpool);
+            // 실제 API 연결 시 아래 주석 해제
+            // const posts = await fetchData('getPosts');
+            renderPosts(MOCK_POSTS);
         });
 
-        function renderCarpool(items) {
-            const list = document.getElementById('carpool-list');
-            list.innerHTML = items.map(item => `
-                <div style="padding:16px; background:var(--slate-800); border-radius:12px; 
-                            display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-                    <div>
-                        <span style="display:inline-block; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;
-                                     background:${item.type === '카풀' ? 'var(--neon-blue)' : 'var(--purple-500)'};">
-                            ${item.type === '카풀' ? '🚗' : '🏠'} ${item.type}
-                        </span>
-                        <span style="font-weight:600; margin-left:8px;">${item.origin}</span>
-                        <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">
-                            ${item.time} · ${item.seats}자리 · ${item.contact}
+        function renderPosts(posts) {
+            const list = document.getElementById('posts-list');
+            if (!posts || posts.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:var(--slate-400);">아직 게시글이 없습니다.</p>';
+                return;
+            }
+
+            list.innerHTML = posts.map(post => `
+                <div style="padding:16px; background:var(--slate-800); border-radius:12px; cursor:pointer; transition:all 0.2s;"
+                     onmouseover="this.style.background='var(--slate-700)'" 
+                     onmouseout="this.style.background='var(--slate-800)'"
+                     onclick="viewPost(${post.id})">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+                        <div style="flex:1; min-width:200px;">
+                            <h3 style="font-size:1rem; font-weight:600; margin-bottom:8px; color:#fff;">${post.title}</h3>
+                            <div style="font-size:0.75rem; color:var(--slate-400);">
+                                <span style="color:var(--neon-blue);">${post.nickname}</span> · ${post.date} · 조회 ${post.views}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -174,9 +174,28 @@
 
         function submitPost(e) {
             e.preventDefault();
+            const formData = new FormData(e.target);
+            const post = {
+                nickname: formData.get('nickname'),
+                title: formData.get('title'),
+                content: formData.get('content'),
+                password: formData.get('password')
+            };
+
             if (USE_MOCK) {
                 alert('✅ 글이 등록되었습니다!\n\n(Mock 모드 - 실제 데이터는 저장되지 않습니다)');
                 hidePostForm();
+                e.target.reset();
+            } else {
+                // 실제 API 호출
+                // fetch(`${API_URL}?action=submitPost`, { method: 'POST', body: JSON.stringify(post) })
+            }
+        }
+
+        function viewPost(id) {
+            const post = MOCK_POSTS.find(p => p.id === id);
+            if (post) {
+                alert(`📝 ${post.title}\n\n${post.content}\n\n- ${post.nickname} (${post.date})`);
             }
         }
     </script>

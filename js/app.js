@@ -2,7 +2,7 @@
 // Busan Galmaetgil 100M - Common App Logic
 // ============================================
 
-const USE_MOCK = false;
+const USE_MOCK = true;  // API 연결 전까지 Mock 데이터 사용
 const API_URL = 'https://script.google.com/macros/s/AKfycbwzcVDqBzkd3uF7hHWJpv2bCHZwiWVrilULi3CbuE24BaiXQt_t9zkD8LyRhzdMeSGt/exec';
 
 // ============================================
@@ -10,27 +10,27 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwzcVDqBzkd3uF7hHWJpv2b
 // ============================================
 const MOCK_DATA = {
     config: {
-        eventDate: '2026-04-25',
+        eventDate: '2026-03-01',
         eventName: '부산 갈맷길 100M',
         registrationOpen: true,
         maxParticipants: 500
     },
     schedule: [
-        { id: 1, time: '04:00', title: '100M 출발', location: '해운대 해수욕장', icon: '🏃' },
-        { id: 2, time: '06:00', title: '50M 출발', location: '해운대 해수욕장', icon: '🏃' },
-        { id: 3, time: '08:00', title: 'CP1 컷오프', location: '달맞이고개', icon: '⏰' },
-        { id: 4, time: '12:00', title: '중간 지점', location: '장산 정상', icon: '⛰️' },
-        { id: 5, time: '18:00', title: '완주 마감', location: '송정 해수욕장', icon: '🏁' },
-        { id: 6, time: '19:00', title: '시상식', location: '송정 해수욕장', icon: '🏆' }
+        { id: 1, time: '15:00', title: '접수 개시', location: '다대포해수욕장', icon: '📋' },
+        { id: 2, time: '16:00', title: '100M 출발', location: '다대포해수욕장', icon: '🏃' },
+        { id: 3, time: '19:00', title: 'CP1 컷오프', location: '화명생태공원', icon: '⏰' },
+        { id: 4, time: '23:00', title: 'CP2 컷오프', location: '기장군청', icon: '⏰' },
+        { id: 5, time: '02:00', title: 'CP3 컷오프', location: '해운대해수욕장', icon: '⏰' },
+        { id: 6, time: '10:00', title: '완주 마감', location: '다대포해수욕장', icon: '🏁' },
+        { id: 7, time: '11:00', title: '시상식', location: '다대포해수욕장', icon: '🏆' }
     ],
     checkpoints: [
-        { id: 1, name: '출발 (낙동강 하구)', km: 0, cutoff: '04:00', lat: 35.0475, lon: 128.9645, elevation: 0 },
-        { id: 2, name: 'CP1 을숙도', km: 15, cutoff: '07:00', lat: 35.0850, lon: 128.9720, elevation: 25 },
-        { id: 3, name: 'CP2 몰운대', km: 30, cutoff: '10:00', lat: 35.0620, lon: 129.0150, elevation: 80 },
-        { id: 4, name: 'CP3 송도', km: 45, cutoff: '12:30', lat: 35.0750, lon: 129.0250, elevation: 120 },
-        { id: 5, name: 'CP4 영도', km: 60, cutoff: '15:00', lat: 35.0900, lon: 129.0680, elevation: 180 },
-        { id: 6, name: 'CP5 해운대', km: 80, cutoff: '18:00', lat: 35.1587, lon: 129.1604, elevation: 5 },
-        { id: 7, name: '완주 (송정)', km: 100, cutoff: '22:00', lat: 35.1789, lon: 129.1998, elevation: 5 }
+        { id: 1, name: '출발 (다대포해수욕장)', km: 0, cutoff: '16:00', lat: 35.0465, lon: 128.9660, elevation: 5 },
+        { id: 2, name: 'CP1 화명생태공원', km: 20, cutoff: '19:00', lat: 35.2103, lon: 129.0156, elevation: 15 },
+        { id: 3, name: 'CP2 기장군청', km: 45, cutoff: '23:00', lat: 35.2447, lon: 129.2222, elevation: 45 },
+        { id: 4, name: 'CP3 해운대해수욕장', km: 60, cutoff: '02:00', lat: 35.1587, lon: 129.1604, elevation: 5 },
+        { id: 5, name: 'CP4 송도해수욕장', km: 80, cutoff: '05:00', lat: 35.0753, lon: 129.0237, elevation: 5 },
+        { id: 6, name: '완주 (다대포해수욕장)', km: 100, cutoff: '10:00', lat: 35.0465, lon: 128.9660, elevation: 5 }
     ],
     notices: [
         { id: 1, date: '2026-01-09', title: '🎉 2026년 대회 참가 신청 오픈!', content: '안녕하세요! 부산 갈맷길 100M 2026 대회 참가 신청이 시작되었습니다. 선착순 500명 마감이오니 서둘러 신청해 주세요! 자세한 내용은 참가 신청 페이지를 확인하세요.', image_url: null },
@@ -72,7 +72,7 @@ async function fetchData(action, params = {}) {
     if (USE_MOCK) {
         return new Promise(resolve => {
             setTimeout(() => {
-                switch(action) {
+                switch (action) {
                     case 'getConfig': resolve(MOCK_DATA.config); break;
                     case 'getSchedule': resolve(MOCK_DATA.schedule); break;
                     case 'getNotices': resolve(MOCK_DATA.notices); break;
@@ -125,7 +125,7 @@ function getCurrentPage() {
 function initMobileMenu() {
     const hamburger = document.querySelector('.nav-hamburger');
     const mobileMenu = document.querySelector('.mobile-menu');
-    
+
     if (hamburger && mobileMenu) {
         hamburger.addEventListener('click', () => {
             mobileMenu.classList.toggle('open');
