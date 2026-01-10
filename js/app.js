@@ -2,7 +2,7 @@
 // Busan Galmaetgil 100M - Common App Logic
 // ============================================
 
-const USE_MOCK = true;  // API 연결 전까지 Mock 데이터 사용
+const USE_MOCK = false;  // API 연결 전까지 Mock 데이터 사용
 const API_URL = 'https://script.google.com/macros/s/AKfycbwzcVDqBzkd3uF7hHWJpv2bCHZwiWVrilULi3CbuE24BaiXQt_t9zkD8LyRhzdMeSGt/exec';
 
 // ============================================
