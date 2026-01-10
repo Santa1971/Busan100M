@@ -54,19 +54,43 @@
             <h1 style="font-size:2.5rem; text-align:center; margin-bottom:48px;" class="gradient-text">참가 신청</h1>
 
             <!-- Tab Buttons -->
-            <div class="tab-buttons" style="display:flex; gap:16px; margin-bottom:32px;">
+            <div class="tab-buttons" style="display:flex; gap:16px; margin-bottom:32px; flex-wrap:wrap;">
                 <button class="tab-btn active" data-tab="register"
-                    style="flex:1; padding:24px 16px; background:linear-gradient(135deg, #1e293b, #334155); border:2px solid var(--neon-red); border-radius:16px; cursor:pointer; transition:all 0.3s;">
+                    style="flex:1; min-width:140px; padding:24px 16px; background:linear-gradient(135deg, #1e293b, #334155); border:2px solid var(--neon-red); border-radius:16px; cursor:pointer; transition:all 0.3s;">
                     <div style="font-size:3rem; margin-bottom:12px;">📝</div>
                     <div style="font-weight:700; font-size:1.125rem; color:#fff;">신청서 작성</div>
-                    <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">새로 참가 신청하기</div>
+                    <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">폼으로 신청하기</div>
+                </button>
+                <button class="tab-btn" data-tab="kakao"
+                    style="flex:1; min-width:140px; padding:24px 16px; background:linear-gradient(135deg, #fee500, #ffd700); border:2px solid #fee500; border-radius:16px; cursor:pointer; transition:all 0.3s;">
+                    <div style="font-size:3rem; margin-bottom:12px;">💬</div>
+                    <div style="font-weight:700; font-size:1.125rem; color:#3c1e1e;">카카오톡 신청</div>
+                    <div style="font-size:0.875rem; color:#5c3c3c; margin-top:4px;">오픈채팅방 참여</div>
                 </button>
                 <button class="tab-btn" data-tab="status"
-                    style="flex:1; padding:24px 16px; background:linear-gradient(135deg, #1e293b, #334155); border:2px solid transparent; border-radius:16px; cursor:pointer; transition:all 0.3s;">
+                    style="flex:1; min-width:140px; padding:24px 16px; background:linear-gradient(135deg, #1e293b, #334155); border:2px solid transparent; border-radius:16px; cursor:pointer; transition:all 0.3s;">
                     <div style="font-size:3rem; margin-bottom:12px;">🔍</div>
                     <div style="font-weight:700; font-size:1.125rem; color:#fff;">신청현황 조회</div>
-                    <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">기존 신청 확인하기</div>
+                    <div style="font-size:0.875rem; color:var(--slate-400); margin-top:4px;">기존 신청 확인</div>
                 </button>
+            </div>
+
+            <!-- Tab Content: KakaoTalk -->
+            <div id="tab-kakao" class="tab-content" style="display:none;">
+                <div class="glass-card" style="padding:32px; text-align:center;">
+                    <h2 style="font-size:1.25rem; margin-bottom:24px;">💬 카카오톡으로 신청하기</h2>
+                    <p style="color:var(--slate-400); margin-bottom:24px;">
+                        아래 버튼을 클릭하여 카카오톡 오픈채팅방에 참여하세요.<br>
+                        채팅방에서 참가 신청 안내를 받으실 수 있습니다.
+                    </p>
+                    <a id="kakao-link" href="#" target="_blank"
+                        style="display:inline-block; padding:16px 48px; background:#fee500; color:#3c1e1e; font-weight:700; font-size:1.125rem; border-radius:12px; text-decoration:none; transition:all 0.3s;">
+                        카카오톡 오픈채팅방 참여하기
+                    </a>
+                    <p style="color:var(--slate-500); font-size:0.875rem; margin-top:16px;">
+                        ※ 카카오톡 앱이 설치되어 있어야 합니다
+                    </p>
+                </div>
             </div>
 
             <!-- Tab Content: Registration Form -->
@@ -117,51 +141,58 @@
                                 </select>
                             </div>
                         </div>
+
+                        <!-- 비상연락처 -->
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
+                                이름</label>
+                            <input type="text" name="emergencyContact" class="form-input" placeholder="김부모">
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
+                                번호</label>
+                            <input type="tel" name="emergencyPhone" class="form-input" placeholder="010-0000-0000">
+                        </div>
+
+                        <!-- 주소 입력 (선택사항) -->
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">주소
+                                (선택)</label>
+                            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                <input type="text" name="postcode" id="postcode" class="form-input" placeholder="우편번호"
+                                    readonly style="flex:1;">
+                                <button type="button" onclick="searchPostcode()" class="btn-primary"
+                                    style="padding:12px 16px; white-space:nowrap;">우편번호 검색</button>
+                            </div>
+                            <input type="text" name="address" id="address" class="form-input" placeholder="기본주소"
+                                readonly style="margin-bottom:8px;">
+                            <input type="text" name="addressDetail" class="form-input" placeholder="상세주소 입력">
+                        </div>
+
+                        <!-- 기념티 사이즈 (선택사항) -->
+                        <div>
+                            <label
+                                style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">기념티
+                                사이즈 (선택)</label>
+                            <select name="tshirtSize" class="form-input">
+                                <option value="">선택안함</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="margin-top:8px; width:100%;">
+                            신청하기
+                        </button>
+                    </form>
                 </div>
-            </div>
-            <!-- 주소 입력 (선택사항) -->
-            <div>
-                <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">주소
-                    (선택)</label>
-                <div style="display:flex; gap:8px; margin-bottom:8px;">
-                    <input type="text" name="postcode" id="postcode" class="form-input" placeholder="우편번호" readonly
-                        style="flex:1;">
-                    <button type="button" onclick="searchPostcode()" class="btn-primary"
-                        style="padding:12px 16px; white-space:nowrap;">우편번호 검색</button>
-                </div>
-                <input type="text" name="address" id="address" class="form-input" placeholder="기본주소" readonly
-                    style="margin-bottom:8px;">
-                <input type="text" name="addressDetail" class="form-input" placeholder="상세주소 입력">
-            </div>
-            <!-- 기념티 사이즈 (선택사항) -->
-            <div>
-                <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">기념티 사이즈
-                    (선택)</label>
-                <select name="tshirtSize" class="form-input">
-                    <option value="">선택안함</option>
-                    <option value="XS">XS</option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                    <option value="XXL">XXL</option>
-                </select>
-            </div>
-            <div>
-                <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
-                    이름</label>
-                <input type="text" name="emergencyContact" class="form-input" placeholder="김부모">
-            </div>
-            <div>
-                <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">비상연락처
-                    번호</label>
-                <input type="tel" name="emergencyPhone" class="form-input" placeholder="010-0000-0000">
-            </div>
-            <button type="submit" class="btn-primary" style="margin-top:8px; width:100%;">
-                신청하기
-            </button>
-            </form>
-            </div>
             </div>
 
             <!-- Tab Content: Status Check -->
@@ -217,7 +248,7 @@
     </nav>
 
     <!-- SOS Button -->
-    <button class="sos-btn">SOS</button>
+    <button class="location-share-btn">◎</button>
 
     <script src="js/app.js"></script>
     <script>
@@ -231,6 +262,17 @@
             }).open();
         }
 
+        // 카카오톡 링크 로드 (Config에서)
+        (async function loadKakaoLink() {
+            const config = await fetchData('getConfig');
+            if (config && config.kakaoLink) {
+                document.getElementById('kakao-link').href = config.kakaoLink;
+            } else {
+                // Mock 모드용 기본 링크
+                document.getElementById('kakao-link').href = 'https://open.kakao.com/o/gXXXXXXX';
+            }
+        })();
+
         // Tab Switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -238,9 +280,17 @@
                 document.querySelectorAll('.tab-btn').forEach(b => {
                     b.classList.remove('active');
                     b.style.borderColor = 'transparent';
+                    // 카카오톡 탭은 노란색 테두리로
+                    if (b.dataset.tab === 'kakao') {
+                        b.style.borderColor = '#fee500';
+                    }
                 });
                 btn.classList.add('active');
-                btn.style.borderColor = 'var(--neon-red)';
+                if (btn.dataset.tab === 'kakao') {
+                    btn.style.borderColor = '#fee500';
+                } else {
+                    btn.style.borderColor = 'var(--neon-red)';
+                }
 
                 // Show corresponding tab content
                 const tabId = btn.dataset.tab;
@@ -260,10 +310,29 @@
             if (USE_MOCK) {
                 alert('🎉 참가 신청이 완료되었습니다!\n\n(Mock 모드 - 실제 데이터는 저장되지 않습니다)');
                 e.target.reset();
+            } else {
+                try {
+                    const params = new URLSearchParams(data);
+                    const response = await fetch(`${API_URL}?action=register&${params.toString()}`, {
+                        method: 'POST'
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('🎉 참가 신청이 완료되었습니다!\n\n' + result.message);
+                        e.target.reset();
+                    } else {
+                        alert('❌ 신청 오류: ' + (result.error || '알 수 없는 오류'));
+                    }
+                } catch (err) {
+                    alert('❌ 네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+                    console.error('Registration error:', err);
+                }
             }
         });
 
         // Status Check Form
+        let currentStatusInfo = null;
+
         document.getElementById('status-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('status-name').value;
@@ -273,21 +342,47 @@
             resultDiv.innerHTML = '<p style="text-align:center; color:var(--slate-400);">조회 중...</p>';
 
             const result = await checkRegistrationStatus(name, phone4);
+            currentStatusInfo = result;
 
             if (result.found) {
+                // 상태별 색상
+                let statusColor = 'var(--green-500)';
+                let statusBg = 'rgba(34, 197, 94, 0.1)';
+                let statusIcon = '✅';
+
+                if (result.status === '취소') {
+                    statusColor = 'var(--slate-400)';
+                    statusBg = 'rgba(100, 116, 139, 0.1)';
+                    statusIcon = '⛔';
+                } else if (result.status === '승인완료' || result.status === '승인') {
+                    statusColor = 'var(--neon-blue)';
+                    statusBg = 'rgba(59, 130, 246, 0.1)';
+                    statusIcon = '🎉';
+                } else if (result.status === '대기' || result.status === '심사중') {
+                    statusColor = '#f59e0b';
+                    statusBg = 'rgba(245, 158, 11, 0.1)';
+                    statusIcon = '⏳';
+                }
+
                 resultDiv.innerHTML = `
-                    <div style="padding:20px; background:rgba(34, 197, 94, 0.1); border:1px solid var(--green-500); border-radius:12px;">
-                        <div style="font-weight:700; color:var(--green-500); margin-bottom:12px;">✅ 신청 확인됨</div>
-                        <div style="display:grid; gap:8px;">
+                    <div style="padding:20px; background:${statusBg}; border:1px solid ${statusColor}; border-radius:12px;">
+                        <div style="font-weight:700; color:${statusColor}; margin-bottom:12px;">${statusIcon} 신청 확인됨</div>
+                        <div style="display:grid; gap:8px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--slate-400);">코스</span>
                                 <span style="font-weight:600;">${result.course}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--slate-400);">상태</span>
-                                <span style="font-weight:600; color:var(--green-500);">${result.status}</span>
+                                <span style="font-weight:600; color:${statusColor};">${result.status}</span>
                             </div>
                         </div>
+                        ${result.status !== '취소' ? `
+                            <button onclick="cancelRegistrationAction()" 
+                                    style="width:100%; padding:12px; background:rgba(239, 68, 68, 0.2); border:1px solid var(--neon-red); border-radius:8px; color:var(--neon-red); cursor:pointer; font-weight:600;">
+                                ❌ 신청 취소하기
+                            </button>
+                        ` : '<p style="text-align:center; color:var(--slate-400); font-size:0.875rem;">이미 취소된 신청입니다.</p>'}
                     </div>
                 `;
             } else {
@@ -299,6 +394,30 @@
                 `;
             }
         });
+
+        async function cancelRegistrationAction() {
+            const name = document.getElementById('status-name').value;
+            const phone4 = document.getElementById('status-phone').value;
+
+            if (!confirm('정말 신청을 취소하시겠습니까?\\n취소 후에는 다시 신청해야 합니다.')) {
+                return;
+            }
+
+            try {
+                const params = new URLSearchParams({ name, phone4 });
+                const response = await fetch(`${API_URL}?action=cancelRegistration&${params.toString()}`, { method: 'POST' });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ 신청이 취소되었습니다.');
+                    document.getElementById('status-form').dispatchEvent(new Event('submit'));
+                } else {
+                    alert('❌ 취소 오류: ' + (result.error || '알 수 없는 오류'));
+                }
+            } catch (err) {
+                alert('❌ 네트워크 오류가 발생했습니다.');
+            }
+        }
     </script>
 </body>
 

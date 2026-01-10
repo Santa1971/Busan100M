@@ -92,7 +92,14 @@
                     style="display:flex; align-items:center; gap:8px;">
                     ⬇️ GPX 다운로드
                 </a>
+                <label for="gpx-upload" class="btn-secondary"
+                    style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    📂 GPX 파일 업로드
+                </label>
+                <input type="file" id="gpx-upload" accept=".gpx" style="display:none;">
             </div>
+            <p id="gpx-status" style="text-align:center; margin-top:12px; font-size:0.875rem; color:var(--slate-400);">
+            </p>
         </section>
 
         <!-- Checkpoints -->
@@ -150,7 +157,7 @@
     </nav>
 
     <!-- SOS Button -->
-    <button class="sos-btn">SOS</button>
+    <button class="location-share-btn">◎</button>
 
     <script src="js/app.js"></script>
     <script src="js/navigation.js"></script>
@@ -200,6 +207,64 @@
             // Stop Navigation Button
             document.getElementById('stop-nav-btn').addEventListener('click', () => {
                 gpxNav.stopNavigation();
+            });
+
+            // GPX File Upload Handler
+            document.getElementById('gpx-upload').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const statusEl = document.getElementById('gpx-status');
+                statusEl.textContent = '📂 GPX 파일을 읽는 중...';
+                statusEl.style.color = 'var(--slate-400)';
+
+                try {
+                    const gpxText = await file.text();
+
+                    // Parse uploaded GPX
+                    const parser = new DOMParser();
+                    const gpxDoc = parser.parseFromString(gpxText, 'text/xml');
+                    const trackPoints = gpxDoc.querySelectorAll('trkpt');
+
+                    if (trackPoints.length === 0) {
+                        throw new Error('GPX 파일에 경로 데이터가 없습니다.');
+                    }
+
+                    // Clear existing data and load new GPX
+                    gpxNav.gpxData = [];
+                    trackPoints.forEach(pt => {
+                        gpxNav.gpxData.push({
+                            lat: parseFloat(pt.getAttribute('lat')),
+                            lon: parseFloat(pt.getAttribute('lon')),
+                            ele: parseFloat(pt.querySelector('ele')?.textContent || 0)
+                        });
+                    });
+
+                    // Reload map and chart with new GPX data
+                    const checkpoints = await fetchData('getCheckpoints');
+
+                    // Clear existing map layers
+                    if (gpxNav.routeLayer) {
+                        gpxNav.map.removeLayer(gpxNav.routeLayer);
+                    }
+
+                    // Draw new route
+                    gpxNav.drawRoute();
+
+                    // Fit map to new route
+                    const bounds = L.latLngBounds(gpxNav.gpxData.map(p => [p.lat, p.lon]));
+                    gpxNav.map.fitBounds(bounds, { padding: [20, 20] });
+
+                    // Update chart
+                    gpxNav.initChart('elevation-chart');
+
+                    statusEl.textContent = `✅ "${file.name}" 로드 완료! (${trackPoints.length}개 포인트)`;
+                    statusEl.style.color = 'var(--green-500)';
+
+                } catch (err) {
+                    statusEl.textContent = '❌ 오류: ' + err.message;
+                    statusEl.style.color = 'var(--neon-red)';
+                }
             });
         });
 

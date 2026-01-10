@@ -6,7 +6,7 @@
 // ============================================
 // CONFIGURATION
 // ============================================
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID'; // Replace with actual ID
+const SPREADSHEET_ID = '1_aR99HL1KCYi6rZmCLCveGICiI4NgjcMpy2v0kLCfOw'; // Replace with actual ID
 const SHEETS = {
   CONFIG: 'Config',
   NOTICES: 'Notices',
@@ -15,7 +15,8 @@ const SHEETS = {
   REGISTRATIONS: 'Registrations',
   RESULTS: 'Results',
   CARPOOL: 'Carpool',
-  EMERGENCY: 'Emergency'
+  CHEERS: 'Cheers',
+  POSTS: 'Posts'
 };
 
 // ============================================
@@ -66,10 +67,14 @@ function doGet(e) {
         return getSchedule();
       case 'getCarpool':
         return getCarpool();
+      case 'getCheers':
+        return getCheers();
       case 'checkStatus':
         return checkStatus(e.parameter.name, e.parameter.phone4);
       case 'getResult':
         return getResult(e.parameter.name, e.parameter.phone4);
+      case 'getPosts':
+        return getPosts();
       default:
         return jsonResponse({ error: 'Invalid action' });
     }
@@ -101,6 +106,14 @@ function getSchedule() {
   return jsonResponse(data);
 }
 
+function getCheers() {
+  const sheet = getSheet(SHEETS.CHEERS);
+  const data = sheet.getDataRange().getValues();
+  // Skip header row, return only message column
+  const cheers = data.slice(1).map(row => row[0]).filter(msg => msg && msg.trim());
+  return jsonResponse(cheers);
+}
+
 function getCarpool() {
   const data = sheetToJSON(getSheet(SHEETS.CARPOOL));
   // Mask phone numbers for privacy
@@ -125,8 +138,11 @@ function checkStatus(name, phone4) {
   if (match) {
     return jsonResponse({
       found: true,
-      status: match.status,
-      course: match.course
+      status: match.status || '신청완료',
+      course: match.course,
+      birth: match.birth,
+      phone: match.phone,
+      timestamp: match.timestamp
     });
   }
   return jsonResponse({ found: false });
@@ -139,7 +155,9 @@ function getResult(name, phone4) {
   }
   
   const data = sheetToJSON(getSheet(SHEETS.RESULTS));
-  const match = data.find(r => r.name === name && r.phone_last4 === phone4);
+  const match = data.find(r => 
+    r.name === name && String(r.phone_last4) === String(phone4)
+  );
   
   if (match) {
     return jsonResponse({
@@ -167,8 +185,10 @@ function doPost(e) {
         return submitCarpool(e);
       case 'deleteCarpool':
         return deleteCarpool(e);
-      case 'submitSOS':
-        return submitSOS(e);
+      case 'submitPost':
+        return submitPost(e);
+      case 'cancelRegistration':
+        return cancelRegistration(e);
       default:
         return jsonResponse({ error: 'Invalid action' });
     }
@@ -180,6 +200,20 @@ function doPost(e) {
 function register(e) {
   const p = e.parameter;
   const sheet = getSheet(SHEETS.REGISTRATIONS);
+  const data = sheet.getDataRange().getValues();
+  
+  // Check for duplicate registration (same name + phone)
+  const existingRow = data.slice(1).findIndex(row => 
+    row[1] === p.name && row[3] === p.phone && row[8] !== '취소'
+  );
+  
+  if (existingRow !== -1) {
+    return jsonResponse({ 
+      success: false, 
+      error: '이미 신청된 정보입니다. 신청현황 조회에서 확인해주세요.',
+      duplicate: true
+    });
+  }
   
   // Sanitize all inputs
   const row = [
@@ -196,6 +230,28 @@ function register(e) {
   
   sheet.appendRow(row);
   return jsonResponse({ success: true, message: '참가 신청이 완료되었습니다.' });
+}
+
+function cancelRegistration(e) {
+  const { name, phone4 } = e.parameter;
+  if (!name || !phone4) {
+    return jsonResponse({ success: false, error: '이름과 전화번호 뒷자리가 필요합니다.' });
+  }
+  
+  const sheet = getSheet(SHEETS.REGISTRATIONS);
+  const data = sheet.getDataRange().getValues();
+  
+  // Find the row (col 1 = name, col 3 = phone - match last 4 digits)
+  for (let i = 1; i < data.length; i++) {
+    const phone = data[i][3] || '';
+    if (data[i][1] === name && phone.slice(-4) === phone4 && data[i][8] !== '취소') {
+      // Update status to '취소' (column 9, index 8)
+      sheet.getRange(i + 1, 9).setValue('취소');
+      return jsonResponse({ success: true, message: '신청이 취소되었습니다.' });
+    }
+  }
+  
+  return jsonResponse({ success: false, error: '신청 내역을 찾을 수 없습니다.' });
 }
 
 function submitCarpool(e) {
@@ -230,17 +286,33 @@ function deleteCarpool(e) {
   return jsonResponse({ success: false, message: '비밀번호가 일치하지 않습니다.' });
 }
 
-function submitSOS(e) {
-  const { lat, lon } = e.parameter;
-  const sheet = getSheet(SHEETS.EMERGENCY);
-  
-  sheet.appendRow([new Date(), lat, lon, 'RECEIVED']);
-  
-  // Optional: Send email notification to safety team
-  // MailApp.sendEmail('safety@example.com', 'SOS Alert', `Location: ${lat}, ${lon}`);
-  
-  return jsonResponse({ success: true, message: 'SOS 신호가 접수되었습니다.' });
+function getPosts() {
+  const data = sheetToJSON(getSheet(SHEETS.POSTS));
+  // Sort by id descending (newest first)
+  data.sort((a, b) => b.id - a.id);
+  return jsonResponse(data);
 }
+
+function submitPost(e) {
+  const p = e.parameter;
+  const sheet = getSheet(SHEETS.POSTS);
+  const data = sheet.getDataRange().getValues();
+  const nextId = data.length > 1 ? Math.max(...data.slice(1).map(r => r[0] || 0)) + 1 : 1;
+  
+  const row = [
+    nextId,
+    sanitize(p.nickname),
+    sanitize(p.title),
+    sanitize(p.content),
+    p.password,
+    new Date().toISOString().split('T')[0],
+    0  // views
+  ];
+  
+  sheet.appendRow(row);
+  return jsonResponse({ success: true, message: '글이 등록되었습니다.' });
+}
+
 
 // ============================================
 // SETUP FUNCTION - Run once to create sheets
@@ -256,7 +328,8 @@ function setupSpreadsheet() {
     'Registrations': ['timestamp', 'name', 'birth', 'phone', 'course', 'bloodType', 'emergencyContact', 'emergencyPhone', 'status'],
     'Results': ['bib', 'name', 'phone_last4', 'course', 'time', 'rank'],
     'Carpool': ['id', 'type', 'origin', 'contact', 'seats', 'time', 'password'],
-    'Emergency': ['timestamp', 'lat', 'lon', 'status']
+    'Cheers': ['message', 'name', 'timestamp'],
+    'Posts': ['id', 'nickname', 'title', 'content', 'password', 'date', 'views']
   };
   
   for (const [name, headers] of Object.entries(sheetsConfig)) {

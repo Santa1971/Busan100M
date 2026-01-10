@@ -120,24 +120,28 @@
     </nav>
 
     <!-- SOS Button -->
-    <button class="sos-btn">SOS</button>
+    <button class="location-share-btn">◎</button>
 
     <script src="js/app.js"></script>
     <script>
-        // MOCK 게시글 데이터
-        const MOCK_POSTS = [
-            { id: 1, nickname: '러닝맨', title: '첫 100마일 도전합니다!', content: '안녕하세요! 이번 3.1절 대회에서 첫 100마일 도전합니다. 선배 러너분들의 조언 부탁드려요!', date: '2026-01-09', views: 45 },
-            { id: 2, nickname: '부산갈매기', title: '작년 완주 후기입니다', content: '작년에 완주했는데 정말 힘들었지만 보람있었어요. CP3 구간에서 컨디션 관리 중요합니다!', date: '2026-01-08', views: 128 },
-            { id: 3, nickname: '울트라러너', title: '장비 추천 부탁드려요', content: '100마일 첫 도전인데 헤드램프랑 배터리 추천 부탁드립니다!', date: '2026-01-07', views: 67 },
-            { id: 4, nickname: '갈맷길사랑', title: '함께 훈련하실 분?', content: '부산 해운대 근처에서 주말에 함께 훈련하실 분 구합니다. 30km 정도 뛰실 수 있으신 분!', date: '2026-01-06', views: 89 },
-            { id: 5, nickname: '카풀구합니다', title: '서울에서 카풀 모집', content: '서울 강남에서 대회 전날 출발 예정입니다. 2자리 남았어요. 연락주세요!', date: '2026-01-05', views: 156 }
-        ];
+        let postsData = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // 실제 API 연결 시 아래 주석 해제
-            // const posts = await fetchData('getPosts');
-            renderPosts(MOCK_POSTS);
+            await loadPosts();
         });
+
+        async function loadPosts() {
+            const list = document.getElementById('posts-list');
+            list.innerHTML = '<p style="text-align:center; color:var(--slate-400);">로딩 중...</p>';
+
+            try {
+                const posts = await fetchData('getPosts');
+                postsData = posts || [];
+                renderPosts(postsData);
+            } catch (err) {
+                list.innerHTML = '<p style="text-align:center; color:var(--slate-400);">게시글을 불러올 수 없습니다.</p>';
+            }
+        }
 
         function renderPosts(posts) {
             const list = document.getElementById('posts-list');
@@ -155,7 +159,7 @@
                         <div style="flex:1; min-width:200px;">
                             <h3 style="font-size:1rem; font-weight:600; margin-bottom:8px; color:#fff;">${post.title}</h3>
                             <div style="font-size:0.75rem; color:var(--slate-400);">
-                                <span style="color:var(--neon-blue);">${post.nickname}</span> · ${post.date} · 조회 ${post.views}
+                                <span style="color:var(--neon-blue);">${post.nickname}</span> · ${post.date} · 조회 ${post.views || 0}
                             </div>
                         </div>
                     </div>
@@ -172,7 +176,7 @@
             document.getElementById('post-form').style.display = 'none';
         }
 
-        function submitPost(e) {
+        async function submitPost(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const post = {
@@ -182,18 +186,29 @@
                 password: formData.get('password')
             };
 
-            if (USE_MOCK) {
-                alert('✅ 글이 등록되었습니다!\n\n(Mock 모드 - 실제 데이터는 저장되지 않습니다)');
-                hidePostForm();
-                e.target.reset();
-            } else {
-                // 실제 API 호출
-                // fetch(`${API_URL}?action=submitPost`, { method: 'POST', body: JSON.stringify(post) })
+            try {
+                const params = new URLSearchParams(post);
+                const response = await fetch(`${API_URL}?action=submitPost&${params.toString()}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ 글이 등록되었습니다!');
+                    hidePostForm();
+                    e.target.reset();
+                    await loadPosts();  // Reload posts
+                } else {
+                    alert('❌ 오류: ' + (result.error || '글 등록에 실패했습니다.'));
+                }
+            } catch (err) {
+                alert('❌ 네트워크 오류가 발생했습니다.');
+                console.error('Post submit error:', err);
             }
         }
 
         function viewPost(id) {
-            const post = MOCK_POSTS.find(p => p.id === id);
+            const post = postsData.find(p => p.id === id);
             if (post) {
                 alert(`📝 ${post.title}\n\n${post.content}\n\n- ${post.nickname} (${post.date})`);
             }

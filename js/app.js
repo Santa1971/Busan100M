@@ -3,7 +3,7 @@
 // ============================================
 
 const USE_MOCK = false;  // API 연결 전까지 Mock 데이터 사용
-const API_URL = 'https://script.google.com/macros/s/AKfycbwzcVDqBzkd3uF7hHWJpv2bCHZwiWVrilULi3CbuE24BaiXQt_t9zkD8LyRhzdMeSGt/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzQ7Z-eEXB7vF_AxZrKzD_Gz0Y3Ew-tQnLooMNNbAAm_MgAYz6M6SrT_bgi56ulB8Zd/exec';
 
 // ============================================
 // MOCK DATA
@@ -66,8 +66,11 @@ const MOCK_DATA = {
 };
 
 // ============================================
-// API FUNCTIONS
+// API FUNCTIONS (with caching)
 // ============================================
+const API_CACHE = {};
+const CACHE_DURATION = 5 * 60 * 1000; // 5분 캐시
+
 async function fetchData(action, params = {}) {
     if (USE_MOCK) {
         return new Promise(resolve => {
@@ -85,9 +88,29 @@ async function fetchData(action, params = {}) {
             }, 200);
         });
     }
+
+    // 캐시 가능한 액션 (읽기 전용)
+    const cacheable = ['getConfig', 'getNotices', 'getCheckpoints', 'getSchedule', 'getCheers'];
+    const cacheKey = action + JSON.stringify(params);
+
+    // 캐시 확인
+    if (cacheable.includes(action) && API_CACHE[cacheKey]) {
+        const cached = API_CACHE[cacheKey];
+        if (Date.now() - cached.time < CACHE_DURATION) {
+            return cached.data;
+        }
+    }
+
     const url = `${API_URL}?action=${action}&${new URLSearchParams(params)}`;
     const res = await fetch(url);
-    return res.json();
+    const data = await res.json();
+
+    // 캐시 저장
+    if (cacheable.includes(action)) {
+        API_CACHE[cacheKey] = { data, time: Date.now() };
+    }
+
+    return data;
 }
 
 async function checkRegistrationStatus(name, phone4) {
@@ -147,35 +170,92 @@ function initActiveNav() {
 function initCheerMarquee() {
     const marquee = document.querySelector('.cheer-marquee-inner');
     if (marquee) {
-        fetchData('getCheers').then(cheers => {
+        // 응원메시지 로드 함수
+        const loadCheers = async () => {
+            const cheers = await fetchData('getCheers');
             if (cheers && cheers.length) {
                 marquee.innerHTML = cheers.map(c => `<span>${c}</span>`).join('');
             }
-        });
+        };
+
+        // 초기 로드
+        loadCheers();
+
+        // 30초마다 자동 새로고침 (실시간 업데이트)
+        setInterval(loadCheers, 30000);
     }
 }
 
-function initSOS() {
-    const sosBtn = document.querySelector('.sos-btn');
-    if (sosBtn) {
-        sosBtn.addEventListener('click', handleSOS);
+function initLocationShare() {
+    const shareBtn = document.querySelector('.location-share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', handleLocationShare);
     }
 }
 
-function handleSOS() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            const { latitude, longitude } = pos.coords;
-            if (USE_MOCK) {
-                alert(`🚨 SOS 신호 전송됨!\n\n위치: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}\n\n(Mock 모드 - 실제 신호는 전송되지 않습니다)`);
-            } else {
-                fetch(`${API_URL}?action=submitSOS&lat=${latitude}&lon=${longitude}`, { method: 'POST' });
-                alert('🚨 SOS 신호가 전송되었습니다. 구호팀이 출동합니다.');
-            }
-        }, () => alert('위치 정보를 가져올 수 없습니다.'));
-    } else {
+function handleLocationShare() {
+    if (!navigator.geolocation) {
         alert('이 브라우저에서는 위치 서비스를 지원하지 않습니다.');
+        return;
     }
+
+    const btn = document.querySelector('.location-share-btn');
+    btn.textContent = '◎';
+    btn.style.opacity = '0.7';
+
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            const { latitude, longitude } = pos.coords;
+            const now = new Date();
+            const timeStr = now.toLocaleString('ko-KR', {
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+            // 카카오톡 공유 메시지
+            const message = `📍 현재 위치 알림\n\n⏰ 시간: ${timeStr}\n📌 위치: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}\n🗺️ 지도: ${mapUrl}`;
+
+            // 카카오톡 공유 (모바일)
+            const kakaoShareUrl = `https://open.kakao.com/o/XXXXX?text=${encodeURIComponent(message)}`;
+
+            // 공유 방법 선택
+            if (navigator.share) {
+                // 모바일 공유 API 지원시
+                navigator.share({
+                    title: '📍 현재 위치 알림',
+                    text: `⏰ ${timeStr}\n📌 위도: ${latitude.toFixed(6)}, 경도: ${longitude.toFixed(6)}`,
+                    url: mapUrl
+                }).catch(() => {
+                    // 공유 취소시 클립보드 복사
+                    copyToClipboard(message, mapUrl);
+                });
+            } else {
+                // 공유 API 미지원시 클립보드 복사
+                copyToClipboard(message, mapUrl);
+            }
+
+            btn.textContent = '◎';
+            btn.style.opacity = '1';
+        },
+        err => {
+            alert('위치 정보를 가져올 수 없습니다.\n위치 권한을 허용해주세요.');
+            btn.textContent = '◎';
+            btn.style.opacity = '1';
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+function copyToClipboard(message, mapUrl) {
+    navigator.clipboard.writeText(message).then(() => {
+        alert('📍 위치 정보가 복사되었습니다!\n\n카카오톡에 붙여넣기 하세요.\n\n' + message);
+    }).catch(() => {
+        // 클립보드 API 미지원시 프롬프트
+        prompt('아래 내용을 복사하여 카카오톡에 붙여넣기 하세요:', message);
+    });
 }
 
 // ============================================
@@ -185,5 +265,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initActiveNav();
     initCheerMarquee();
-    initSOS();
+    initLocationShare();
 });

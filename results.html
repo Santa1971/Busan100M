@@ -101,7 +101,7 @@
     </nav>
 
     <!-- SOS Button -->
-    <button class="sos-btn">SOS</button>
+    <button class="location-share-btn">◎</button>
 
     <script src="js/app.js"></script>
     <script>
@@ -165,12 +165,20 @@
                 ctx.textAlign = 'center';
                 ctx.fillStyle = '#1e3a5f';
 
+                // Title
+                ctx.font = 'bold 48px Noto Sans KR, sans-serif';
+                ctx.fillText('부산 갈맷길 100M 완주증', canvas.width / 2, canvas.height * 0.18);
+                ctx.font = '28px Noto Sans KR, sans-serif';
+                ctx.fillStyle = '#ef4444';
+                ctx.fillText('3.1절 특별 이벤트', canvas.width / 2, canvas.height * 0.25);
+
                 // Name
-                ctx.font = 'bold 80px Noto Sans KR, sans-serif';
+                ctx.fillStyle = '#1e3a5f';
+                ctx.font = 'bold 72px Noto Sans KR, sans-serif';
                 ctx.fillText(currentResult.name, canvas.width / 2, canvas.height * 0.45);
 
                 // Course & Time
-                ctx.font = '50px Noto Sans KR, sans-serif';
+                ctx.font = '40px Noto Sans KR, sans-serif';
                 ctx.fillText(`${currentResult.course} 완주`, canvas.width / 2, canvas.height * 0.55);
                 ctx.fillText(`기록: ${currentResult.time}`, canvas.width / 2, canvas.height * 0.62);
                 ctx.fillText(`순위: ${currentResult.rank}위`, canvas.width / 2, canvas.height * 0.69);

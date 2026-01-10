@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
- 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -267,8 +267,9 @@
             max-width: 860px;
             margin: 0 auto 48px;
             border-radius: 16px;
-            overflow: hidden;
+            overflow: visible;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
         }
 
         .info-card {
@@ -277,6 +278,14 @@
             padding: 32px 20px;
             text-align: center;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(30, 30, 45, 0.95);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.2);
         }
 
         .info-card:last-child {
@@ -829,6 +838,49 @@
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+    ">
+        <div style="
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #ef4444;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        "></div>
+        <p style="margin-top: 24px; color: #94a3b8; font-size: 0.9rem;">페이지를 불러오는 중...</p>
+        <p style="margin-top: 8px; color: #64748b; font-size: 0.75rem;">부산 갈맷길 100M</p>
+    </div>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        // Hide loading screen when page is fully loaded
+        window.addEventListener('load', function () {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        });
+    </script>
+
     <!-- Navigation -->
     <nav class="nav-desktop">
         <div class="nav-container">
@@ -892,12 +944,28 @@
                 <div class="info-card">
                     <span class="icon">📅</span>
                     <div class="label">대회일자</div>
-                    <div class="value">3월 1일</div>
+                    <div class="value">3월 1일 <small style="font-size:0.75rem; color:var(--neon-red);">16:00</small>
+                    </div>
                 </div>
                 <div class="info-card status">
                     <span class="icon">👤</span>
                     <div class="label">접수현황</div>
-                    <div class="value">접수중</div>
+                    <div class="value" id="registration-status">로딩중...</div>
+                </div>
+            </div>
+
+            <!-- Period Info (접수기간/취소기간) -->
+            <div class="period-info" id="period-info"
+                style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-bottom:24px;">
+                <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:0.9rem;">
+                    <span style="color:#22c55e;">📝</span>
+                    <span>접수기간:</span>
+                    <span id="registration-period" style="color:#fff; font-weight:600;">로딩중...</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:0.9rem;">
+                    <span style="color:#ef4444;">❌</span>
+                    <span>취소기간:</span>
+                    <span id="cancel-period" style="color:#fff; font-weight:600;">로딩중...</span>
                 </div>
             </div>
 
@@ -1066,8 +1134,9 @@
     </nav>
 
     <!-- SOS Button -->
-    <button class="sos-btn">SOS</button>
+    <button class="location-share-btn">◎</button>
 
+    <script src="js/app.js"></script>
     <script>
         function toggleMenu() {
             const menu = document.getElementById('mobileMenu');
@@ -1075,8 +1144,66 @@
             menu.classList.toggle('open');
             btn.textContent = menu.classList.contains('open') ? '✕' : '☰';
         }
+
+        // Load period info from Config
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const config = await fetchData('getConfig');
+                if (config) {
+                    // 접수기간
+                    if (config.registrationPeriod) {
+                        document.getElementById('registration-period').textContent = config.registrationPeriod;
+                    } else {
+                        document.getElementById('registration-period').textContent = '미정';
+                    }
+                    // 취소기간
+                    if (config.cancelPeriod) {
+                        document.getElementById('cancel-period').textContent = config.cancelPeriod;
+                    } else {
+                        document.getElementById('cancel-period').textContent = '미정';
+                    }
+
+                    // 접수현황 자동 계산
+                    updateRegistrationStatus(config);
+                }
+            } catch (err) {
+                document.getElementById('registration-period').textContent = '-';
+                document.getElementById('cancel-period').textContent = '-';
+                document.getElementById('registration-status').textContent = '-';
+            }
+        });
+
+        // 접수현황 자동 계산 함수
+        function updateRegistrationStatus(config) {
+            const statusEl = document.getElementById('registration-status');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);  // 시간 제거
+
+            // Config에서 날짜 파싱 (YYYY-MM-DD 형식)
+            const startDate = config.registrationStart ? new Date(config.registrationStart) : null;
+            const endDate = config.registrationEnd ? new Date(config.registrationEnd) : null;
+
+            if (!startDate || !endDate) {
+                // 날짜 설정이 없으면 기본값 표시
+                statusEl.textContent = config.registrationOpen === 'true' ? '접수중' : '접수마감';
+                return;
+            }
+
+            if (today < startDate) {
+                // 접수 시작 전
+                statusEl.textContent = '접수예정';
+                statusEl.style.color = '#3b82f6';  // 파란색
+            } else if (today >= startDate && today <= endDate) {
+                // 접수 기간 내
+                statusEl.textContent = '접수중';
+                statusEl.style.color = '#22c55e';  // 초록색
+            } else {
+                // 접수 종료
+                statusEl.textContent = '접수마감';
+                statusEl.style.color = '#ef4444';  // 빨간색
+            }
+        }
     </script>
 </body>
-
 
 </html>
