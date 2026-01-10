@@ -47,7 +47,7 @@ Google Apps Script를 사용하면 **무료로** 백엔드 서버를 만들 수 
 |-----|-------|
 | eventDate | 2026-03-01 |
 | eventName | 부산 갈맷길 100M |
-| kakaoLink | https://open.kakao.com/o/gXXXXXXX |
+| kakaoLink | https://open.kakao.com/o/go8xJLai |
 | registrationOpen | true |
 | maxParticipants | 500 |
 

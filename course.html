@@ -81,7 +81,7 @@
 
         <!-- Action Buttons -->
         <section style="padding:0 24px 32px; max-width:800px; margin:0 auto;">
-            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+            <div class="action-buttons-grid">
                 <button id="location-btn" class="btn-secondary" style="display:flex; align-items:center; gap:8px;">
                     📍 현재 위치
                 </button>
@@ -104,8 +104,7 @@
 
         <!-- Checkpoints -->
         <section style="padding:0 24px 32px; max-width:1200px; margin:0 auto;">
-            <div id="checkpoints-grid"
-                style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+            <div id="checkpoints-grid" class="checkpoints-responsive">
                 <!-- Filled by JS -->
             </div>
         </section>

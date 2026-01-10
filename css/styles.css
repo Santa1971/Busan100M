@@ -537,3 +537,374 @@ body {
 .off-route-warning p {
     opacity: 0.9;
 }
+
+/* ============================================
+   Custom Map Controls
+   ============================================ */
+
+.map-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.map-control-btn {
+    width: 44px;
+    height: 44px;
+    background: var(--slate-900);
+    border: 1px solid var(--slate-700);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.map-control-btn:hover {
+    background: var(--slate-800);
+    border-color: var(--neon-blue);
+}
+
+.map-control-btn:active {
+    transform: scale(0.95);
+}
+
+.map-control-btn.fit-btn {
+    background: linear-gradient(135deg, var(--neon-blue), #2563eb);
+    border-color: transparent;
+}
+
+.map-control-btn.fit-btn:hover {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+}
+
+/* ============================================
+   Course Page Action Buttons Mobile
+   ============================================ */
+
+.action-buttons-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* ============================================
+   Checkpoints Grid Mobile
+   ============================================ */
+
+.checkpoints-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+/* ============================================
+   Additional Mobile Responsive Styles
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    /* Action buttons - 2 columns on mobile */
+    .action-buttons-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .action-buttons-grid .btn-primary,
+    .action-buttons-grid .btn-secondary {
+        padding: 12px 16px;
+        font-size: 0.8rem;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* Checkpoints - 1 column on mobile */
+    .checkpoints-responsive {
+        grid-template-columns: 1fr;
+    }
+
+    /* Map container mobile height */
+    .map-wrapper {
+        position: relative;
+    }
+
+    /* Custom map controls - larger for touch */
+    .map-controls {
+        top: 12px;
+        right: 12px;
+    }
+
+    .map-control-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+    }
+
+    /* Navigation panel mobile layout */
+    .nav-info-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .nav-info-item:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .nav-info-value {
+        font-size: 1rem;
+    }
+
+    .nav-info-label {
+        font-size: 0.7rem;
+    }
+
+    /* Footer spacing for bottom nav */
+    .footer {
+        padding-bottom: 80px;
+    }
+
+    /* Elevation chart touch friendly */
+    #elevation-chart {
+        touch-action: pan-x pan-y;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Extra small screens - stack buttons vertically */
+    .action-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons-grid .btn-primary,
+    .action-buttons-grid .btn-secondary {
+        padding: 14px 20px;
+        font-size: 0.875rem;
+    }
+
+    /* Make map taller on small screens for better visibility */
+    #map,
+    .map-container {
+        height: 300px;
+    }
+
+    /* Navigation info smaller */
+    .nav-info-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .nav-info-item {
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-info-label {
+        margin-bottom: 0;
+    }
+
+    .nav-info-value {
+        font-size: 1.125rem;
+    }
+
+    /* Map controls closer to edge */
+    .map-controls {
+        top: 8px;
+        right: 8px;
+        gap: 6px;
+    }
+}
+
+/* ============================================
+   Landscape orientation adjustments
+   ============================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+    #map,
+    .map-container {
+        height: 250px;
+    }
+
+    .nav-panel {
+        padding: 8px 16px;
+    }
+
+    .nav-info-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .nav-info-item {
+        padding: 8px;
+    }
+
+    .nav-info-item:last-child {
+        grid-column: auto;
+    }
+}
+
+/* ============================================
+   Registration Page Mobile Styles
+   ============================================ */
+
+.tab-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.registration-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+
+    /* Tab buttons - single column on mobile */
+    .tab-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .tab-buttons .tab-btn {
+        min-width: 100% !important;
+        flex: none !important;
+        padding: 16px !important;
+    }
+
+    .tab-buttons .tab-btn>div:first-child {
+        font-size: 2rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Form inputs larger touch targets */
+    .form-input {
+        padding: 16px;
+        font-size: 16px;
+        /* Prevents iOS zoom on focus */
+    }
+
+    /* Form grid single column */
+    .registration-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Schedule table responsive */
+    .schedule-table th,
+    .schedule-table td {
+        padding: 12px 8px;
+        font-size: 0.875rem;
+    }
+
+    /* Cutoff table mobile */
+    .cutoff-table-responsive th,
+    .cutoff-table-responsive td {
+        padding: 12px 8px;
+    }
+
+    .cutoff-table-responsive th:first-child,
+    .cutoff-table-responsive td:first-child {
+        max-width: 150px;
+        word-wrap: break-word;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Tab buttons even smaller on small screens */
+    .tab-buttons .tab-btn {
+        padding: 12px !important;
+    }
+
+    .tab-buttons .tab-btn>div:first-child {
+        font-size: 1.5rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .tab-buttons .tab-btn>div:nth-child(2) {
+        font-size: 0.95rem !important;
+    }
+
+    .tab-buttons .tab-btn>div:last-child {
+        font-size: 0.75rem !important;
+    }
+
+    /* Schedule cards compact */
+    .schedule-card {
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+
+    .schedule-card .schedule-icon {
+        font-size: 2rem !important;
+    }
+
+    /* Results table scroll */
+    .table-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ============================================
+   Touch Friendly Improvements
+   ============================================ */
+
+/* Minimum touch target size (44x44px recommended by Apple) */
+.btn-primary,
+.btn-secondary,
+.tab-btn,
+.map-control-btn,
+.nav-hamburger {
+    min-height: 44px;
+}
+
+/* Better focus states for accessibility */
+.btn-primary:focus,
+.btn-secondary:focus,
+.form-input:focus {
+    outline: 2px solid var(--neon-blue);
+    outline-offset: 2px;
+}
+
+/* Smooth scrolling for all containers */
+.scroll-container {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================
+   Print Styles (for certificates etc.)
+   ============================================ */
+
+@media print {
+
+    .nav-desktop,
+    .bottom-nav,
+    .cheer-marquee,
+    .location-share-btn,
+    .map-controls {
+        display: none !important;
+    }
+
+    body {
+        padding: 0;
+        background: white;
+        color: black;
+    }
+}

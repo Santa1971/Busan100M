@@ -138,7 +138,7 @@ class GPXNavigation {
             : [35.1, 129.0];
 
         this.map = L.map(containerId, {
-            zoomControl: true,
+            zoomControl: false,  // Disable default zoom control for custom controls
             scrollWheelZoom: true
         }).setView(center, 11);
 
@@ -178,6 +178,9 @@ class GPXNavigation {
             position: 'bottomleft'
         }).addTo(this.map);
 
+        // Add custom zoom controls
+        this.addCustomZoomControls(containerId);
+
         // Draw route
         if (this.gpxData.length > 0) {
             this.drawRoute();
@@ -187,6 +190,60 @@ class GPXNavigation {
         this.addCheckpointMarkers();
 
         return this.map;
+    }
+
+    // Add custom zoom controls for better mobile accessibility
+    addCustomZoomControls(containerId) {
+        const mapContainer = document.getElementById(containerId).parentElement;
+
+        // Check if controls already exist
+        if (mapContainer.querySelector('.map-controls')) {
+            return;
+        }
+
+        // Create controls container
+        const controls = document.createElement('div');
+        controls.className = 'map-controls';
+        controls.innerHTML = `
+            <button class="map-control-btn zoom-in-btn" title="확대">+</button>
+            <button class="map-control-btn zoom-out-btn" title="축소">−</button>
+            <button class="map-control-btn fit-btn" title="전체 보기">⛶</button>
+        `;
+
+        // Wrap map container for positioning
+        const wrapper = document.createElement('div');
+        wrapper.className = 'map-wrapper';
+        wrapper.style.position = 'relative';
+
+        mapContainer.style.position = 'relative';
+        mapContainer.appendChild(controls);
+
+        // Bind events
+        controls.querySelector('.zoom-in-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.map.zoomIn();
+        });
+
+        controls.querySelector('.zoom-out-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.map.zoomOut();
+        });
+
+        controls.querySelector('.fit-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.fitMapToBounds();
+        });
+    }
+
+    // Fit map to show entire route
+    fitMapToBounds() {
+        if (this.gpxData.length > 0) {
+            const bounds = L.latLngBounds(this.gpxData.map(p => [p.lat, p.lon]));
+            this.map.fitBounds(bounds, { padding: [30, 30] });
+        } else if (this.checkpoints.length > 0) {
+            const bounds = L.latLngBounds(this.checkpoints.map(cp => [cp.lat, cp.lon]));
+            this.map.fitBounds(bounds, { padding: [30, 30] });
+        }
     }
 
     drawRoute() {
