@@ -1,102 +1,32 @@
-# 🚀 GitHub Pages 배포 가이드 (초보자용)
+# 배포 가이드 (Deployment Guide)
 
-## 📌 개요
-GitHub Pages는 **무료**로 웹사이트를 호스팅할 수 있는 서비스입니다.  
-이 가이드를 따라하면 약 **10분** 안에 사이트를 배포할 수 있습니다.
+이 문서는 최적화된 이벤트 사이트 코드를 배포하는 방법을 설명합니다.
 
----
+**중요:** 프론트엔드(`js/app.js`)가 기존 API URL을 계속 사용할 수 있도록, 기존 배포를 업데이트해야 합니다.
 
-## 🔐 1단계: GitHub 계정 만들기 (이미 있으면 건너뛰기)
+## 1. Google Apps Script (Backend) 업데이트
 
-1. [github.com](https://github.com) 접속
-2. **Sign up** 클릭
-3. 이메일, 비밀번호, 사용자명 입력
-4. 이메일 인증 완료
+1. Google Drive에서 연결된 **Apps Script 프로젝트**를 엽니다.
+2. `Code.gs` 파일을 엽니다.
+3. 기존 코드를 모두 지우고, 이 리포지토리의 `Code.gs` 내용을 복사하여 붙여넣습니다.
+4. `Ctrl + S` (또는 `Cmd + S`)를 눌러 저장합니다.
+5. 상단 메뉴에서 **배포(Deploy)** > **배포 관리(Manage deployments)**를 클릭합니다.
+6. 왼쪽 목록에서 현재 활성화된(Active) 배포를 선택합니다 (연필 아이콘 클릭).
+7. **버전(Version)** 드롭다운 메뉴에서 **새 버전(New version)**을 선택합니다.
+8. **배포(Deploy)**를 클릭하여 업데이트를 완료합니다.
 
----
+*참고: 이렇게 하면 기존 웹 앱 URL이 유지되므로, 프론트엔드 코드에서 URL을 수정할 필요가 없습니다.*
 
-## 📁 2단계: 새 저장소(Repository) 만들기
+## 2. Frontend 업데이트
 
-1. GitHub 로그인 후 우측 상단 **+** 버튼 클릭
-2. **New repository** 선택
-3. 아래와 같이 입력:
+1. 이 리포지토리의 `js/app.js` 파일을 엽니다.
+2. 기존 `js/app.js` 내용을 새 코드로 교체합니다.
+3. (필요한 경우) `index.html`이 `#countdown-card` ID를 올바르게 가지고 있는지 확인합니다.
 
-| 항목 | 입력값 |
-|------|--------|
-| Repository name | `busan-100m` (원하는 이름) |
-| Description | 부산 갈맷길 100M 공식 웹사이트 |
-| Public/Private | ✅ **Public** 선택 |
-| Add README | ❌ 체크 해제 |
+## 3. 변경 사항 확인
 
-4. **Create repository** 버튼 클릭
-
----
-
-## ⬆️ 3단계: 파일 업로드
-
-### 방법 A: 웹에서 직접 업로드 (쉬움 ⭐)
-
-1. 생성된 저장소 페이지에서 **"uploading an existing file"** 클릭
-2. `Busan100` 폴더 안의 모든 파일/폴더를 드래그앤드롭:
-   ```
-   📁 Busan100
-   ├── index.html
-   ├── course.html
-   ├── schedule.html
-   ├── registration.html
-   ├── notices.html
-   ├── community.html
-   ├── results.html
-   ├── 📁 css/
-   ├── 📁 js/
-   ├── 📁 assets/
-   └── 📁 public/
-   ```
-3. 아래쪽 **Commit changes** 버튼 클릭
-
-> ⚠️ **주의**: 폴더째로 업로드하지 말고, 폴더 **안의 내용물**을 업로드하세요!
-
----
-
-## 🌐 4단계: GitHub Pages 활성화
-
-1. 저장소 페이지에서 **Settings** (⚙️) 탭 클릭
-2. 왼쪽 메뉴에서 **Pages** 클릭
-3. **Source** 섹션에서:
-   - Branch: `main` 선택
-   - Folder: `/ (root)` 선택
-4. **Save** 버튼 클릭
-
----
-
-## ⏳ 5단계: 배포 완료 확인
-
-1. 1~2분 기다리기 (자동 빌드 중)
-2. 페이지 새로고침
-3. 상단에 표시되는 URL 확인:
-   ```
-   🔗 https://[사용자명].github.io/busan-100m/
-   ```
-4. 링크 클릭하여 사이트 확인!
-
----
-
-## ✅ 완료!
-
-이제 전 세계 누구나 위 URL로 사이트에 접속할 수 있습니다.
-
-### 🔧 수정이 필요할 때
-1. 저장소에서 파일 클릭
-2. ✏️ 연필 아이콘 클릭 (Edit)
-3. 수정 후 **Commit changes** 클릭
-4. 1~2분 후 자동 반영
-
----
-
-## ❓ 문제 해결
-
-| 문제 | 해결책 |
-|------|--------|
-| 404 에러 | `index.html` 파일이 저장소 루트에 있는지 확인 |
-| 스타일 깨짐 | `css/` 폴더가 제대로 업로드되었는지 확인 |
-| 이미지 안 보임 | `assets/` 폴더 업로드 확인 |
+1. 웹 사이트에 접속합니다.
+2. 개발자 도구(F12) > Network 탭을 엽니다.
+3. 페이지를 새로고침합니다.
+4. 개별 API 호출(`getConfig`, `getNotices` 등) 대신 하나의 `getInitialData` 호출만 발생하는지 확인합니다.
+5. 데이터 로딩 속도가 개선되었는지 확인합니다.

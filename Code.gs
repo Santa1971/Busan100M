@@ -54,7 +54,7 @@ function jsonResponse(data) {
 // ============================================
 function doGet(e) {
   const action = e.parameter.action;
-  
+
   try {
     switch (action) {
       case 'getConfig':
@@ -75,6 +75,8 @@ function doGet(e) {
         return getResult(e.parameter.name, e.parameter.phone4);
       case 'getPosts':
         return getPosts();
+      case 'getInitialData':
+        return getInitialData();
       default:
         return jsonResponse({ error: 'Invalid action' });
     }
@@ -89,6 +91,46 @@ function getConfig() {
   const config = {};
   data.slice(1).forEach(row => config[row[0]] = row[1]);
   return jsonResponse(config);
+}
+
+function getInitialData() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('initialData');
+
+  if (cached) {
+    return ContentService.createTextOutput(cached)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Fetch all needed data
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+  // Config
+  const configData = ss.getSheetByName(SHEETS.CONFIG).getDataRange().getValues();
+  const config = {};
+  configData.slice(1).forEach(row => config[row[0]] = row[1]);
+
+  // Notices
+  const notices = sheetToJSON(ss.getSheetByName(SHEETS.NOTICES));
+
+  // Schedule
+  const schedule = sheetToJSON(ss.getSheetByName(SHEETS.SCHEDULE));
+
+  // Checkpoints
+  const checkpoints = sheetToJSON(ss.getSheetByName(SHEETS.CHECKPOINTS));
+
+  const result = {
+    config: config,
+    notices: notices,
+    schedule: schedule,
+    checkpoints: checkpoints
+  };
+
+  const jsonString = JSON.stringify(result);
+  cache.put('initialData', jsonString, 300); // Cache for 5 minutes
+
+  return ContentService.createTextOutput(jsonString)
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 function getNotices() {
@@ -129,12 +171,12 @@ function checkStatus(name, phone4) {
   if (!name || !phone4) {
     return jsonResponse({ error: 'Name and phone4 required' });
   }
-  
+
   const data = sheetToJSON(getSheet(SHEETS.REGISTRATIONS));
-  const match = data.find(r => 
+  const match = data.find(r =>
     r.name === name && r.phone && r.phone.slice(-4) === phone4
   );
-  
+
   if (match) {
     return jsonResponse({
       found: true,
@@ -153,12 +195,12 @@ function getResult(name, phone4) {
   if (!name || !phone4) {
     return jsonResponse({ error: 'Name and phone4 required' });
   }
-  
+
   const data = sheetToJSON(getSheet(SHEETS.RESULTS));
-  const match = data.find(r => 
+  const match = data.find(r =>
     r.name === name && String(r.phone_last4) === String(phone4)
   );
-  
+
   if (match) {
     return jsonResponse({
       bib: match.bib,
@@ -176,7 +218,7 @@ function getResult(name, phone4) {
 // ============================================
 function doPost(e) {
   const action = e.parameter.action;
-  
+
   try {
     switch (action) {
       case 'register':
@@ -201,20 +243,20 @@ function register(e) {
   const p = e.parameter;
   const sheet = getSheet(SHEETS.REGISTRATIONS);
   const data = sheet.getDataRange().getValues();
-  
+
   // Check for duplicate registration (same name + phone)
-  const existingRow = data.slice(1).findIndex(row => 
+  const existingRow = data.slice(1).findIndex(row =>
     row[1] === p.name && row[3] === p.phone && row[8] !== '취소'
   );
-  
+
   if (existingRow !== -1) {
-    return jsonResponse({ 
-      success: false, 
+    return jsonResponse({
+      success: false,
       error: '이미 신청된 정보입니다. 신청현황 조회에서 확인해주세요.',
       duplicate: true
     });
   }
-  
+
   // Sanitize all inputs
   const row = [
     new Date(),
@@ -227,7 +269,7 @@ function register(e) {
     sanitize(p.emergencyPhone),
     '신청완료'
   ];
-  
+
   sheet.appendRow(row);
   return jsonResponse({ success: true, message: '참가 신청이 완료되었습니다.' });
 }
@@ -237,10 +279,10 @@ function cancelRegistration(e) {
   if (!name || !phone4) {
     return jsonResponse({ success: false, error: '이름과 전화번호 뒷자리가 필요합니다.' });
   }
-  
+
   const sheet = getSheet(SHEETS.REGISTRATIONS);
   const data = sheet.getDataRange().getValues();
-  
+
   // Find the row (col 1 = name, col 3 = phone - match last 4 digits)
   for (let i = 1; i < data.length; i++) {
     const phone = data[i][3] || '';
@@ -250,14 +292,14 @@ function cancelRegistration(e) {
       return jsonResponse({ success: true, message: '신청이 취소되었습니다.' });
     }
   }
-  
+
   return jsonResponse({ success: false, error: '신청 내역을 찾을 수 없습니다.' });
 }
 
 function submitCarpool(e) {
   const p = e.parameter;
   const sheet = getSheet(SHEETS.CARPOOL);
-  
+
   const row = [
     Date.now(),
     sanitize(p.type),
@@ -267,7 +309,7 @@ function submitCarpool(e) {
     sanitize(p.time),
     sanitize(p.password) // Hashed in production
   ];
-  
+
   sheet.appendRow(row);
   return jsonResponse({ success: true });
 }
@@ -276,7 +318,7 @@ function deleteCarpool(e) {
   const { id, password } = e.parameter;
   const sheet = getSheet(SHEETS.CARPOOL);
   const data = sheet.getDataRange().getValues();
-  
+
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(id) && data[i][6] === password) {
       sheet.deleteRow(i + 1);
@@ -298,7 +340,7 @@ function submitPost(e) {
   const sheet = getSheet(SHEETS.POSTS);
   const data = sheet.getDataRange().getValues();
   const nextId = data.length > 1 ? Math.max(...data.slice(1).map(r => r[0] || 0)) + 1 : 1;
-  
+
   const row = [
     nextId,
     sanitize(p.nickname),
@@ -308,7 +350,7 @@ function submitPost(e) {
     new Date().toISOString().split('T')[0],
     0  // views
   ];
-  
+
   sheet.appendRow(row);
   return jsonResponse({ success: true, message: '글이 등록되었습니다.' });
 }
@@ -319,7 +361,7 @@ function submitPost(e) {
 // ============================================
 function setupSpreadsheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  
+
   const sheetsConfig = {
     'Config': ['Key', 'Value'],
     'Notices': ['id', 'date', 'title', 'content', 'image_url'],
@@ -331,7 +373,7 @@ function setupSpreadsheet() {
     'Cheers': ['message', 'name', 'timestamp'],
     'Posts': ['id', 'nickname', 'title', 'content', 'password', 'date', 'views']
   };
-  
+
   for (const [name, headers] of Object.entries(sheetsConfig)) {
     let sheet = ss.getSheetByName(name);
     if (!sheet) {
@@ -339,6 +381,6 @@ function setupSpreadsheet() {
     }
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   }
-  
+
   Logger.log('Setup complete!');
 }

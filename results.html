@@ -7,15 +7,42 @@
     <title>부산 갈맷길 100M | 결과조회</title>
     <meta name="description" content="부산 갈맷길 100M 결과 조회 및 완주증 발급">
     <link rel="stylesheet" href="css/styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nanum+Brush+Script&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Page-specific overrides for Result Page */
+        .btn-green {
+            background: #22c55e;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        .btn-green:hover {
+            background: #16a34a;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Adjust main content padding for fixed nav */
+        main {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="nav-desktop glass">
+    <nav class="nav-desktop">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">
-                <img src="assets/main_logo.png" alt="갈맷길 100M" onerror="this.style.display='none'">
-                <span class="gradient-text">갈맷길 100M</span>
+                <img src="assets/main_logo.jpg" alt="갈맷길 100M" onerror="this.src='https://via.placeholder.com/40'">
+                <span>BUSAN 100M</span>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">홈</a></li>
@@ -24,14 +51,14 @@
                 <li><a href="registration.html">참가신청</a></li>
                 <li><a href="notices.html">공지사항</a></li>
                 <li><a href="community.html">커뮤니티</a></li>
-                <li><a href="results.html">결과조회</a></li>
+                <li><a href="results.html" class="active">결과조회</a></li>
             </ul>
-            <button class="nav-hamburger">☰</button>
+            <button class="nav-hamburger" onclick="toggleMenu()">☰</button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu">
+    <div class="mobile-menu" id="mobileMenu">
         <a href="index.html">🏠 홈</a>
         <a href="course.html">🗺️ 코스</a>
         <a href="schedule.html">📅 일정</a>
@@ -41,35 +68,27 @@
         <a href="results.html">🏆 결과조회</a>
     </div>
 
-    <!-- Cheer Marquee -->
-    <div class="cheer-marquee">
-        <div class="cheer-marquee-inner marquee"></div>
-    </div>
-
     <!-- Main Content -->
-    <main style="padding-top:120px; min-height:100vh;">
+    <main>
         <section style="max-width:800px; margin:0 auto; padding:40px 24px;">
-            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:48px;" class="gradient-text">결과 조회 / 완주증</h1>
+            <h1 style="font-size:2.5rem; text-align:center; margin-bottom:48px; color:#ef4444;">결과 조회 / 완주증</h1>
 
             <!-- Search Form -->
             <div class="glass-card" style="padding:24px; margin-bottom:32px;">
-                <h2 style="font-size:1.25rem; margin-bottom:24px;">🏆 기록 검색</h2>
+                <h2 style="font-size:1.25rem; margin-bottom:24px; color:#fff;">🏆 기록 검색</h2>
                 <form id="search-form" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
                     <div style="flex:1; min-width:150px;">
-                        <label
-                            style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">이름</label>
+                        <label style="display:block; font-size:0.875rem; color:#94a3b8; margin-bottom:8px;">이름</label>
                         <input type="text" id="search-name" required class="form-input" placeholder="홍길동">
                     </div>
                     <div style="width:120px;">
-                        <label style="display:block; font-size:0.875rem; color:var(--slate-400); margin-bottom:8px;">휴대폰
-                            뒷자리</label>
-                        <input type="text" id="search-phone" required maxlength="4" class="form-input"
-                            placeholder="0000">
+                        <label style="display:block; font-size:0.875rem; color:#94a3b8; margin-bottom:8px;">휴대폰 뒷자리</label>
+                        <input type="text" id="search-phone" required maxlength="4" class="form-input" placeholder="0000">
                     </div>
                     <button type="submit" class="btn-primary" style="height:52px;">검색</button>
                 </form>
-                <p style="font-size:0.75rem; color:var(--slate-400); margin-top:12px;">
-                    💡 테스트: 이름 "김철수", 뒷자리 "1234"
+                <p style="font-size:0.75rem; color:#64748b; margin-top:12px;">
+                    💡 테스트: 이름 "김철수", 뒷자리 "1234" (Mock 데이터)
                 </p>
             </div>
 
@@ -96,7 +115,7 @@
             <a href="course.html"><span class="icon">🗺️</span>코스</a>
             <a href="schedule.html"><span class="icon">📅</span>일정</a>
             <a href="registration.html"><span class="icon">📝</span>신청</a>
-            <a href="results.html"><span class="icon">🏆</span>결과</a>
+            <a href="results.html" class="active"><span class="icon">🏆</span>결과</a>
         </div>
     </nav>
 
@@ -105,6 +124,13 @@
 
     <script src="js/app.js"></script>
     <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.nav-hamburger');
+            menu.classList.toggle('open');
+            btn.textContent = menu.classList.contains('open') ? '✕' : '☰';
+        }
+
         let currentResult = null;
 
         document.getElementById('search-form').addEventListener('submit', async (e) => {
@@ -114,7 +140,7 @@
             const container = document.getElementById('result-container');
 
             container.style.display = 'block';
-            container.innerHTML = '<p style="text-align:center; color:var(--slate-400);">검색 중...</p>';
+            container.innerHTML = '<p style="text-align:center; color:#94a3b8;">검색 중...</p>';
 
             const result = await searchResult(name, phone4);
             currentResult = result;
@@ -123,16 +149,16 @@
                 container.innerHTML = `
                     <div class="glass-card fade-in" style="padding:32px; text-align:center;">
                         <div style="font-size:4rem; margin-bottom:16px;">🎉</div>
-                        <h2 style="font-size:1.75rem; margin-bottom:8px;">${result.name}님 축하합니다!</h2>
-                        <p style="color:var(--slate-400); margin-bottom:24px;">
+                        <h2 style="font-size:1.75rem; margin-bottom:8px; color:#fff;">${result.name}님 축하합니다!</h2>
+                        <p style="color:#94a3b8; margin-bottom:24px;">
                             ${result.course} 완주 | 기록 ${result.time} | ${result.rank}위
                         </p>
-                        
+
                         <div id="certificate-preview" style="margin-bottom:24px;">
                             <!-- Certificate will be rendered here -->
                         </div>
-                        
-                        <button onclick="downloadCertificate()" class="btn-primary btn-green" style="width:100%;">
+
+                        <button onclick="downloadCertificate()" class="btn-primary btn-green" style="width:100%; font-size:1.1rem;">
                             📥 완주증 다운로드
                         </button>
                     </div>
@@ -142,8 +168,8 @@
                 container.innerHTML = `
                     <div class="glass-card fade-in" style="padding:32px; text-align:center;">
                         <div style="font-size:4rem; margin-bottom:16px;">😢</div>
-                        <h2 style="font-size:1.25rem; margin-bottom:8px;">검색 결과가 없습니다</h2>
-                        <p style="color:var(--slate-400);">이름과 휴대폰 뒷자리를 다시 확인해주세요.</p>
+                        <h2 style="font-size:1.25rem; margin-bottom:8px; color:#fff;">검색 결과가 없습니다</h2>
+                        <p style="color:#94a3b8;">이름과 휴대폰 뒷자리를 다시 확인해주세요.</p>
                     </div>
                 `;
             }
@@ -156,89 +182,101 @@
             const ctx = canvas.getContext('2d');
             const img = new Image();
 
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-
-                // Draw text
-                ctx.textAlign = 'center';
-                ctx.fillStyle = '#1e3a5f';
-
-                // Title
-                ctx.font = 'bold 48px Noto Sans KR, sans-serif';
-                ctx.fillText('부산 갈맷길 100M 완주증', canvas.width / 2, canvas.height * 0.18);
-                ctx.font = '28px Noto Sans KR, sans-serif';
-                ctx.fillStyle = '#ef4444';
-                ctx.fillText('3.1절 특별 이벤트', canvas.width / 2, canvas.height * 0.25);
-
-                // Name
-                ctx.fillStyle = '#1e3a5f';
-                ctx.font = 'bold 72px Noto Sans KR, sans-serif';
-                ctx.fillText(currentResult.name, canvas.width / 2, canvas.height * 0.45);
-
-                // Course & Time
-                ctx.font = '40px Noto Sans KR, sans-serif';
-                ctx.fillText(`${currentResult.course} 완주`, canvas.width / 2, canvas.height * 0.55);
-                ctx.fillText(`기록: ${currentResult.time}`, canvas.width / 2, canvas.height * 0.62);
-                ctx.fillText(`순위: ${currentResult.rank}위`, canvas.width / 2, canvas.height * 0.69);
-
-                // Show preview
-                const preview = document.getElementById('certificate-preview');
-                preview.innerHTML = `<img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.5);">`;
-            };
-
-            img.onerror = () => {
-                // If certificate_bg.png not found, create a simple one
+            // Default fallback drawing
+            const drawFallback = () => {
                 canvas.width = 1200;
                 canvas.height = 850;
 
                 // Background gradient
                 const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, '#f0f9ff');
-                gradient.addColorStop(1, '#e0f2fe');
+                gradient.addColorStop(0, '#f8fafc');
+                gradient.addColorStop(1, '#e2e8f0');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 // Border
-                ctx.strokeStyle = '#0369a1';
-                ctx.lineWidth = 8;
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 10;
                 ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+                // Inner Border
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
 
                 // Title
                 ctx.textAlign = 'center';
-                ctx.fillStyle = '#0369a1';
-                ctx.font = 'bold 48px serif';
-                ctx.fillText('완 주 증', canvas.width / 2, 120);
+                ctx.fillStyle = '#0f172a';
+                ctx.font = 'bold 60px "Noto Sans KR", serif';
+                ctx.fillText('완  주  증', canvas.width / 2, 180);
 
                 // Medal icon
-                ctx.font = '100px serif';
-                ctx.fillText('🏅', canvas.width / 2, 220);
+                ctx.font = '80px serif';
+                ctx.fillText('🏅', canvas.width / 2, 280);
 
                 // Name
-                ctx.fillStyle = '#1e3a5f';
-                ctx.font = 'bold 72px sans-serif';
-                ctx.fillText(currentResult.name, canvas.width / 2, 340);
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 80px "Noto Sans KR", sans-serif';
+                ctx.fillText(currentResult.name, canvas.width / 2, 400);
 
                 // Details
-                ctx.font = '36px sans-serif';
-                ctx.fillStyle = '#475569';
-                ctx.fillText(`부산 갈맷길 100M ${currentResult.course}`, canvas.width / 2, 420);
-                ctx.fillText(`기록: ${currentResult.time}`, canvas.width / 2, 480);
-                ctx.fillText(`순위: ${currentResult.rank}위`, canvas.width / 2, 540);
+                ctx.font = '40px "Noto Sans KR", sans-serif';
+                ctx.fillStyle = '#334155';
+                ctx.fillText(`부산 갈맷길 100M ${currentResult.course}`, canvas.width / 2, 490);
+
+                ctx.font = 'bold 50px "Noto Sans KR", sans-serif';
+                ctx.fillStyle = '#ef4444';
+                ctx.fillText(`기록: ${currentResult.time}`, canvas.width / 2, 570);
+
+                ctx.font = '36px "Noto Sans KR", sans-serif';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText(`종합 순위: ${currentResult.rank}위`, canvas.width / 2, 640);
 
                 // Date
-                ctx.font = '28px sans-serif';
-                ctx.fillText('2026년 3월 1일', canvas.width / 2, 620);
+                ctx.font = '30px "Noto Sans KR", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText('2026년 3월 1일', canvas.width / 2, 730);
 
                 // Org
-                ctx.fillText('부산트레일러닝협회', canvas.width / 2, 680);
+                ctx.font = 'bold 36px "Noto Sans KR", sans-serif';
+                ctx.fillStyle = '#0f172a';
+                ctx.fillText('부산 갈맷길 100M 조직위원회', canvas.width / 2, 780);
 
                 // Show preview
-                const preview = document.getElementById('certificate-preview');
-                preview.innerHTML = `<img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.5);">`;
+                updatePreview();
             };
 
+            const updatePreview = () => {
+                const preview = document.getElementById('certificate-preview');
+                if(preview) {
+                    preview.innerHTML = `<img src="${canvas.toDataURL()}" style="max-width:100%; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1);">`;
+                }
+            };
+
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                // Draw text on image
+                // Assuming the background image has space for text
+                ctx.textAlign = 'center';
+
+                // Name position adjustment required based on actual bg image
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 72px "Noto Sans KR", sans-serif';
+                ctx.fillText(currentResult.name, canvas.width / 2, canvas.height * 0.45);
+
+                ctx.font = '40px "Noto Sans KR", sans-serif';
+                ctx.fillText(`${currentResult.course} 완주`, canvas.width / 2, canvas.height * 0.55);
+                ctx.fillText(`기록: ${currentResult.time}`, canvas.width / 2, canvas.height * 0.62);
+
+                updatePreview();
+            };
+
+            img.onerror = drawFallback;
+
+            // Try loading custom bg, if fail, fallback
             img.src = 'assets/certificate_bg.png';
         }
 
@@ -247,7 +285,7 @@
 
             const canvas = document.getElementById('certificate-canvas');
             const link = document.createElement('a');
-            link.download = `완주증_${currentResult.name}_${currentResult.course}.png`;
+            link.download = `완주증_${currentResult.name}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
