@@ -66,12 +66,24 @@ const MOCK_DATA = {
 };
 
 // ============================================
-// API FUNCTIONS (with caching)
+// API FUNCTIONS (with caching & batch loading)
 // ============================================
 const API_CACHE = {};
 const CACHE_DURATION = 5 * 60 * 1000; // 5분 캐시
+let INITIAL_DATA_PROMISE = null; // Promise for batch data
+
+// Start preloading immediately if not using mock
+if (!USE_MOCK) {
+    INITIAL_DATA_PROMISE = fetch(`${API_URL}?action=getInitialData`)
+        .then(res => res.json())
+        .catch(err => {
+            console.error('Initial data load failed:', err);
+            return null;
+        });
+}
 
 async function fetchData(action, params = {}) {
+    // 1. Mock Data
     if (USE_MOCK) {
         return new Promise(resolve => {
             setTimeout(() => {
@@ -89,6 +101,23 @@ async function fetchData(action, params = {}) {
         });
     }
 
+    // 2. Check Batch Data (Preloaded)
+    // If we have preloaded data for this action, return it immediately
+    if (INITIAL_DATA_PROMISE && Object.keys(params).length === 0) {
+        try {
+            const batchData = await INITIAL_DATA_PROMISE;
+            if (batchData) {
+                if (action === 'getConfig' && batchData.config) return batchData.config;
+                if (action === 'getNotices' && batchData.notices) return batchData.notices;
+                if (action === 'getCheckpoints' && batchData.checkpoints) return batchData.checkpoints;
+                if (action === 'getSchedule' && batchData.schedule) return batchData.schedule;
+            }
+        } catch (e) {
+            console.warn('Using fallback due to preload error', e);
+        }
+    }
+
+    // 3. Regular Caching
     // 캐시 가능한 액션 (읽기 전용)
     const cacheable = ['getConfig', 'getNotices', 'getCheckpoints', 'getSchedule', 'getCheers'];
     const cacheKey = action + JSON.stringify(params);
@@ -101,6 +130,7 @@ async function fetchData(action, params = {}) {
         }
     }
 
+    // 4. Network Request (Fallback)
     const url = `${API_URL}?action=${action}&${new URLSearchParams(params)}`;
     const res = await fetch(url);
     const data = await res.json();

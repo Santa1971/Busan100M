@@ -936,15 +936,15 @@
                     <div class="label">거리</div>
                     <div class="value">100<small> Miles</small></div>
                 </div>
-                <div class="info-card">
-                    <span class="icon">⏱️</span>
-                    <div class="label">제한시간</div>
-                    <div class="value">40<small> Hours</small></div>
+                <div class="info-card" id="countdown-card">
+                    <span class="icon">⏳</span>
+                    <div class="label">D-Day</div>
+                    <div class="value" id="countdown-timer" style="font-size:1.4rem;">계산중...</div>
                 </div>
                 <div class="info-card">
                     <span class="icon">📅</span>
                     <div class="label">대회일자</div>
-                    <div class="value">3월 1일 <small style="font-size:0.75rem; color:var(--neon-red);">16:00</small>
+                    <div class="value">3월 1일 <small style="font-size:0.75rem; color:#ef4444;">16:00</small>
                     </div>
                 </div>
                 <div class="info-card status">
@@ -1202,6 +1202,44 @@
                 statusEl.textContent = '접수마감';
                 statusEl.style.color = '#ef4444';  // 빨간색
             }
+
+            // 카운트다운 시작
+            if (config.eventDate) {
+                startCountdown(config.eventDate);
+            }
+        }
+
+        function startCountdown(targetDateStr) {
+            const timerEl = document.getElementById('countdown-timer');
+            // eventDate format assumption: YYYY-MM-DD or YYYY-MM-DD HH:mm:ss
+            // Add default time if missing
+            if (targetDateStr.length <= 10) {
+                targetDateStr += ' 16:00:00';
+            }
+
+            const targetDate = new Date(targetDateStr).getTime();
+
+            const updateTimer = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    timerEl.textContent = "대회 시작!";
+                    timerEl.style.color = "#ef4444";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerEl.innerHTML = `<span style="color:#fff">${days}</span>일 <span style="color:#fff">${hours}</span>시간`;
+                // 모바일 등 공간 부족시 초 단위는 생략하거나 작게 표시 가능
+            };
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
         }
     </script>
 </body>
