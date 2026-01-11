@@ -166,6 +166,47 @@ async function searchResult(name, phone4) {
     return fetchData('getResult', { name, phone4 });
 }
 
+async function fetchWeatherForCheckpoints(checkpoints) {
+    if (!checkpoints || checkpoints.length === 0) return [];
+
+    const updatedCheckpoints = await Promise.all(checkpoints.map(async (cp) => {
+        if (!cp.lat || !cp.lon) return cp;
+
+        try {
+            // Open-Meteo API (Free, No Key)
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${cp.lat}&longitude=${cp.lon}&current_weather=true`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.current_weather) {
+                // Determine icon based on WMO code
+                const code = data.current_weather.weathercode;
+                let icon = '☀️';
+                if (code >= 1 && code <= 3) icon = '⛅'; // Clouds
+                else if (code >= 45 && code <= 48) icon = '🌫️'; // Fog
+                else if (code >= 51 && code <= 67) icon = '🌧️'; // Drizzle/Rain
+                else if (code >= 71 && code <= 77) icon = '❄️'; // Snow
+                else if (code >= 80 && code <= 82) icon = '🌧️'; // Showers
+                else if (code >= 95) icon = '⛈️'; // Thunderstorm
+
+                return {
+                    ...cp,
+                    weather: {
+                        temp: Math.round(data.current_weather.temperature),
+                        icon: icon,
+                        desc: data.current_weather.windspeed > 20 ? '바람' : '맑음' // Simple desc
+                    }
+                };
+            }
+        } catch (e) {
+            console.warn(`Weather fetch failed for ${cp.name}`, e);
+        }
+        return cp;
+    }));
+
+    return updatedCheckpoints;
+}
+
 // ============================================
 // UI HELPERS
 // ============================================

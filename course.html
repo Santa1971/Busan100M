@@ -168,8 +168,14 @@
             gpxNav = new GPXNavigation();
 
             // Load checkpoints
-            const checkpoints = await fetchData('getCheckpoints');
+            let checkpoints = await fetchData('getCheckpoints');
             renderCheckpoints(checkpoints);
+
+            // Fetch Weather (Async Update)
+            fetchWeatherForCheckpoints(checkpoints).then(updatedCheckpoints => {
+                checkpoints = updatedCheckpoints;
+                renderCheckpoints(checkpoints);
+            });
 
             // Load GPX
             const loaded = await gpxNav.loadGPX('public/course.gpx');
@@ -274,9 +280,17 @@
                 const isFinish = i === checkpoints.length - 1;
                 const bgColor = isStart ? 'var(--green-500)' : isFinish ? 'var(--neon-red)' : 'var(--neon-blue)';
 
+                // Weather HTML (if available)
+                const weatherHtml = cp.weather ? `
+                    <div style="margin-left:auto; text-align:center; min-width:50px;" class="weather-info">
+                        <div style="font-size:1.5rem; line-height:1;">${cp.weather.icon}</div>
+                        <div style="font-size:0.75rem; color:var(--slate-400); margin-top:2px;">${cp.weather.temp}°C</div>
+                    </div>
+                ` : '';
+
                 return `
                     <div class="glass-card" style="padding:16px; display:flex; align-items:center; gap:12px;">
-                        <div style="width:40px; height:40px; border-radius:50%; background:${bgColor}; 
+                        <div style="width:40px; height:40px; border-radius:50%; background:${bgColor};
                                     display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">
                             ${i + 1}
                         </div>
@@ -286,6 +300,7 @@
                                 ${cp.km}km | 컷오프 ${cp.cutoff}
                             </div>
                         </div>
+                        ${weatherHtml}
                     </div>
                 `;
             }).join('');
