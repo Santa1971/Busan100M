@@ -77,6 +77,8 @@ function doGet(e) {
         return getPosts();
       case 'getInitialData':
         return getInitialData();
+      case 'getAdminData':
+        return getAdminData(e.parameter.password);
       default:
         return jsonResponse({ error: 'Invalid action' });
     }
@@ -213,6 +215,23 @@ function getResult(name, phone4) {
   return jsonResponse(null);
 }
 
+function getPosts() {
+  const data = sheetToJSON(getSheet(SHEETS.POSTS));
+  // Sort by id descending (newest first)
+  data.sort((a, b) => b.id - a.id);
+  return jsonResponse(data);
+}
+
+function getAdminData(password) {
+  // Use a simple password for this demo.
+  // In production, implement a more robust auth or use a different script access level.
+  if (password !== 'admin_secret_key') {
+    return jsonResponse({ error: 'Unauthorized' });
+  }
+  const registrations = sheetToJSON(getSheet(SHEETS.REGISTRATIONS));
+  return jsonResponse({ registrations: registrations });
+}
+
 // ============================================
 // POST HANDLERS
 // ============================================
@@ -231,6 +250,8 @@ function doPost(e) {
         return submitPost(e);
       case 'cancelRegistration':
         return cancelRegistration(e);
+      case 'updateStatus':
+        return updateStatus(e);
       default:
         return jsonResponse({ error: 'Invalid action' });
     }
@@ -328,13 +349,6 @@ function deleteCarpool(e) {
   return jsonResponse({ success: false, message: '비밀번호가 일치하지 않습니다.' });
 }
 
-function getPosts() {
-  const data = sheetToJSON(getSheet(SHEETS.POSTS));
-  // Sort by id descending (newest first)
-  data.sort((a, b) => b.id - a.id);
-  return jsonResponse(data);
-}
-
 function submitPost(e) {
   const p = e.parameter;
   const sheet = getSheet(SHEETS.POSTS);
@@ -353,6 +367,21 @@ function submitPost(e) {
 
   sheet.appendRow(row);
   return jsonResponse({ success: true, message: '글이 등록되었습니다.' });
+}
+
+function updateStatus(e) {
+  const { name, phone, status } = e.parameter;
+  const sheet = getSheet(SHEETS.REGISTRATIONS);
+  const data = sheet.getDataRange().getValues();
+
+  // The phone sent here is full phone number
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][1] === name && data[i][3] === phone) { // Name & Phone match
+      sheet.getRange(i + 1, 9).setValue(status); // Update Status col (index 8, 1-based is 9)
+      return jsonResponse({ success: true });
+    }
+  }
+  return jsonResponse({ success: false, error: 'Not found' });
 }
 
 

@@ -142,6 +142,9 @@ class GPXNavigation {
             scrollWheelZoom: true
         }).setView(center, 11);
 
+        // Add "My Location" Button on Map (New Feature)
+        this.addMyLocationButton(containerId);
+
         // Define multiple map layers
         const baseLayers = {
             '🗺️ 등고선 (OpenTopoMap)': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -233,6 +236,26 @@ class GPXNavigation {
             e.stopPropagation();
             this.fitMapToBounds();
         });
+    }
+
+    // Add My Location Button logic (New Feature)
+    addMyLocationButton(containerId) {
+        const controls = document.querySelector('.map-controls');
+        if(!controls) return;
+
+        const locBtn = document.createElement('button');
+        locBtn.className = 'map-control-btn loc-btn';
+        locBtn.title = "내 위치";
+        locBtn.innerHTML = "◎";
+        locBtn.style.color = '#ef4444';
+        locBtn.style.fontWeight = 'bold';
+
+        locBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.getCurrentLocation().catch(e => alert(e.message));
+        });
+
+        controls.appendChild(locBtn);
     }
 
     // Fit map to show entire route
@@ -327,8 +350,8 @@ class GPXNavigation {
 
             const color = isStart ? '#22c55e' : isFinish ? '#ef4444' : '#3b82f6';
             const icon = L.divIcon({
-                html: `<div style="background:${color}; width:32px; height:32px; border-radius:50%; 
-                       display:flex; align-items:center; justify-content:center; 
+                html: `<div style="background:${color}; width:32px; height:32px; border-radius:50%;
+                       display:flex; align-items:center; justify-content:center;
                        color:white; font-weight:bold; border:3px solid white;
                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${i + 1}</div>`,
                 className: 'checkpoint-marker',
@@ -415,6 +438,9 @@ class GPXNavigation {
                         const idx = elements[0].index;
                         this.focusMapOnPoint(idx);
                     }
+                },
+                onHover: (e, elements) => {
+                    // Optional: Highlight on map during hover
                 }
             }
         });
