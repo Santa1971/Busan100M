@@ -26,6 +26,7 @@
                 <li><a href="registration.html">참가신청</a></li>
                 <li><a href="notices.html">공지사항</a></li>
                 <li><a href="community.html">커뮤니티</a></li>
+                <li><a href="gallery.html">갤러리</a></li>
                 <li><a href="results.html">결과조회</a></li>
             </ul>
             <button class="nav-hamburger">☰</button>
@@ -40,6 +41,7 @@
         <a href="registration.html">📝 참가신청</a>
         <a href="notices.html">📢 공지사항</a>
         <a href="community.html">👥 커뮤니티</a>
+        <a href="gallery.html">📸 갤러리</a>
         <a href="results.html">🏆 결과조회</a>
     </div>
 
@@ -382,6 +384,10 @@
                                     style="width:100%; padding:12px; background:rgba(239, 68, 68, 0.2); border:1px solid var(--neon-red); border-radius:8px; color:var(--neon-red); cursor:pointer; font-weight:600;">
                                 ❌ 신청 취소하기
                             </button>
+                            <button onclick="downloadDigitalBib('${name}', '${result.course}')"
+                                    style="width:100%; margin-top:12px; padding:12px; background:linear-gradient(135deg, #3b82f6, #2563eb); border:none; border-radius:8px; color:white; cursor:pointer; font-weight:600;">
+                                🎽 모바일 배번호 다운로드
+                            </button>
                         ` : '<p style="text-align:center; color:var(--slate-400); font-size:0.875rem;">이미 취소된 신청입니다.</p>'}
                     </div>
                 `;
@@ -417,6 +423,52 @@
             } catch (err) {
                 alert('❌ 네트워크 오류가 발생했습니다.');
             }
+        }
+
+        function downloadDigitalBib(name, course) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+
+            // Draw Background
+            const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+            gradient.addColorStop(0, '#1e293b');
+            gradient.addColorStop(1, '#0f172a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 600, 400);
+
+            // Draw Border
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(10, 10, 580, 380);
+
+            // Draw Header
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 30px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('BUSAN GALMAETGIL 100M', 300, 60);
+
+            // Draw Course
+            ctx.fillStyle = '#ef4444';
+            ctx.font = 'bold 80px sans-serif';
+            ctx.fillText(course, 300, 160);
+
+            // Draw Name
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 50px sans-serif';
+            ctx.fillText(name, 300, 240);
+
+            // Draw Footer
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '20px sans-serif';
+            ctx.fillText('2026.03.01', 300, 350);
+
+            // Download
+            const link = document.createElement('a');
+            link.download = `BIB_${name}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
         }
     </script>
 </body>

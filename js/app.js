@@ -82,7 +82,7 @@ if (!USE_MOCK) {
         });
 }
 
-async function fetchData(action, params = {}) {
+async function fetchData(action, params = {}, method = 'GET') {
     // 1. Mock Data
     if (USE_MOCK) {
         return new Promise(resolve => {
@@ -95,6 +95,7 @@ async function fetchData(action, params = {}) {
                     case 'getCarpool': resolve(MOCK_DATA.carpool); break;
                     case 'getCheers': resolve(MOCK_DATA.cheers); break;
                     case 'getWeather': resolve(MOCK_DATA.weather); break;
+                    case 'updateStatus': resolve({ success: true }); break;
                     default: resolve(null);
                 }
             }, 200);
@@ -103,7 +104,7 @@ async function fetchData(action, params = {}) {
 
     // 2. Check Batch Data (Preloaded)
     // If we have preloaded data for this action, return it immediately
-    if (INITIAL_DATA_PROMISE && Object.keys(params).length === 0) {
+    if (method === 'GET' && INITIAL_DATA_PROMISE && Object.keys(params).length === 0) {
         try {
             const batchData = await INITIAL_DATA_PROMISE;
             if (batchData) {
@@ -123,7 +124,7 @@ async function fetchData(action, params = {}) {
     const cacheKey = action + JSON.stringify(params);
 
     // 캐시 확인
-    if (cacheable.includes(action) && API_CACHE[cacheKey]) {
+    if (method === 'GET' && cacheable.includes(action) && API_CACHE[cacheKey]) {
         const cached = API_CACHE[cacheKey];
         if (Date.now() - cached.time < CACHE_DURATION) {
             return cached.data;
@@ -131,12 +132,23 @@ async function fetchData(action, params = {}) {
     }
 
     // 4. Network Request (Fallback)
-    const url = `${API_URL}?action=${action}&${new URLSearchParams(params)}`;
-    const res = await fetch(url);
+    let url = `${API_URL}?action=${action}`;
+    let options = { method: method };
+
+    if (method === 'GET') {
+        url += `&${new URLSearchParams(params)}`;
+    } else {
+        options.body = new URLSearchParams({ action, ...params });
+        // Google Apps Script doPost receives form data best this way or simple params query string even in POST
+        // But for standard fetch to GAS doPost, usually params are handled differently.
+        // NOTE: GAS doPost(e) e.parameter contains query parameters AND body parameters if x-www-form-urlencoded
+    }
+
+    const res = await fetch(url, options);
     const data = await res.json();
 
     // 캐시 저장
-    if (cacheable.includes(action)) {
+    if (method === 'GET' && cacheable.includes(action)) {
         API_CACHE[cacheKey] = { data, time: Date.now() };
     }
 
