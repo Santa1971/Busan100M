@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nanum+Brush+Script&display=swap"
         rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -338,6 +339,26 @@
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+        }
+
+        .btn-qr {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 44px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            transition: all 0.3s;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .btn-qr:hover {
+            background: rgba(34, 197, 94, 0.2);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
         }
 
         .btn-red {
@@ -979,10 +1000,36 @@
             <!-- Buttons -->
             <div class="hero-buttons">
                 <a href="registration.html" class="btn-red">참가신청 →</a>
+                <button onclick="openQrModal()" class="btn-qr">📱 모바일 티켓</button>
                 <a href="course.html" class="btn-outline">코스 확인 🗺️</a>
             </div>
         </div>
     </section>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
+        <div style="background:#1e293b; padding:32px; border-radius:24px; width:90%; max-width:400px; text-align:center; position:relative; border:1px solid rgba(255,255,255,0.1);">
+            <button onclick="closeQrModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</button>
+
+            <h3 style="color:#fff; margin-bottom:8px; font-size:1.5rem;">모바일 티켓 발급</h3>
+            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:24px;">등록하신 정보를 입력하여 QR코드를 생성하세요.</p>
+
+            <div id="qr-input-area">
+                <input type="text" id="qr-name" placeholder="이름" style="width:100%; padding:12px; margin-bottom:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px;">
+                <input type="tel" id="qr-phone" placeholder="전화번호 (예: 010-1234-5678)" style="width:100%; padding:12px; margin-bottom:24px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px;">
+                <button onclick="generateQr()" style="width:100%; padding:14px; background:#22c55e; color:#fff; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">QR코드 생성하기</button>
+            </div>
+
+            <div id="qr-display-area" style="display:none;">
+                <div style="background:#fff; padding:16px; border-radius:16px; display:inline-block; margin-bottom:16px;">
+                    <div id="qrcode"></div>
+                </div>
+                <div style="color:#22c55e; font-weight:bold; margin-bottom:8px;" id="qr-user-name"></div>
+                <p style="color:#64748b; font-size:0.8rem;">현장 운영본부에서 이 QR코드를 보여주세요.</p>
+                <button onclick="resetQr()" style="margin-top:20px; padding:8px 16px; background:rgba(255,255,255,0.1); color:#94a3b8; border:none; border-radius:8px; font-size:0.8rem; cursor:pointer;">다시 입력하기</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Gallery Section -->
     <section class="gallery-section">
@@ -1140,6 +1187,49 @@
 
     <script src="js/app.js"></script>
     <script>
+        function openQrModal() {
+            document.getElementById('qr-modal').style.display = 'flex';
+        }
+        function closeQrModal() {
+            document.getElementById('qr-modal').style.display = 'none';
+        }
+        function generateQr() {
+            const name = document.getElementById('qr-name').value.trim();
+            const phone = document.getElementById('qr-phone').value.trim();
+
+            if (!name || !phone) {
+                alert('이름과 전화번호를 모두 입력해주세요.');
+                return;
+            }
+
+            // Generate JSON data for QR
+            const data = JSON.stringify({ name, phone });
+
+            // Clear previous QR
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+
+            // Generate New QR
+            new QRCode(qrContainer, {
+                text: data,
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('qr-user-name').textContent = `${name} 님`;
+            document.getElementById('qr-input-area').style.display = 'none';
+            document.getElementById('qr-display-area').style.display = 'block';
+        }
+        function resetQr() {
+            document.getElementById('qr-input-area').style.display = 'block';
+            document.getElementById('qr-display-area').style.display = 'none';
+            document.getElementById('qr-name').value = '';
+            document.getElementById('qr-phone').value = '';
+        }
+
         function toggleMenu() {
             const menu = document.getElementById('mobileMenu');
             const btn = document.querySelector('.nav-hamburger');
